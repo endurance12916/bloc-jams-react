@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import logo from '../images/bloc_jams_logo.png'
-import './navbar.css';
+import logo from '../assets/images/bloc_jams_logo.png'
+import '../styles/navbar.css';
 
 class Navbar extends Component {
   render() {
