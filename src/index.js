@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import Home from './components/home'
 import Collection from './components/collection'
+import Album from './components/album'
 
 // import Navbar from './components/navbar.js'
 
@@ -34,6 +35,7 @@ ReactDOM.render((
         <Route exact path="/" component={App} />
         <Route path="/home" component={Home} />
         <Route path="/collection" component={Collection} />
+        <Route path="/album" component={Album} />
       </div>
     </BrowserRouter>
 ), document.getElementById('root'));

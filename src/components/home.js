@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Navbar from './navbar.js'
+import Navbar from './navbar.js';
 import '../styles/home.css';
 
 class Home extends Component {
@@ -30,6 +30,7 @@ class Home extends Component {
       </div>
     );
   }
+  
 
   componentDidMount() {
       let pointsArray = document.getElementsByClassName('point');

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
-  BrowserRouter as Router,
-  Route,
+  // BrowserRouter as Router,
+  // Route,
   Link
 } from 'react-router-dom';
 import logo from '../assets/images/bloc_jams_logo.png';
