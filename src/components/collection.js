@@ -72,12 +72,12 @@ import cover from '../assets/images/album_covers/01.png';
 class Collection extends Component {
   render() {
     return (
-      <div className="landing">
+      <section className="landing">
         <Navbar/>
         <div className="collection-page">
           <section className="album-covers container clearfix"></section>
         </div>
-      </div>
+      </section>
     );
   }
 

@@ -5,7 +5,7 @@ import '../styles/home.css';
 class Home extends Component {
   render() {
     return (
-      <div className="landing">
+      <section className="landing">
         <Navbar/>
           <section className="hero-content"> 
               <h1 className="hero-title">Turn the music up!</h1>
@@ -27,7 +27,7 @@ class Home extends Component {
                   <p className="point-description">Listen to your music on the go. This streaming service is available on all mobile platforms.</p>
               </div>
           </section>
-      </div>
+      </section>
     );
   }
   

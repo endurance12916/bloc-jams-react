@@ -7,7 +7,7 @@ import cover from '../assets/images/album_covers/01.png';
 class Album extends Component {
   render() {
     return (
-        <div className="album-page">
+        <section className="album-page">
             <Navbar />
             <main className="album-view container narrow">
                 <section className="clearfix">
@@ -59,7 +59,7 @@ class Album extends Component {
                     </div>
                 </div>
             </section>
-        </div>
+        </section>
     )
   }
 }
