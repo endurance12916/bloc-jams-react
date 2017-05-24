@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import Home from './components/home'
-import Collection from './components/collection'
-import Album from './components/album'
+import App from './App.js';
+import Home from './components/home/home.js'
+import Collection from './components/collection/collection.js'
+import Album from './components/album/album.js'
 
 // import Navbar from './components/navbar.js'
 

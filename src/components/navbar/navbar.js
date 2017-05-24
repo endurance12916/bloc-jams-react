@@ -4,8 +4,8 @@ import {
   // Route,
   Link
 } from 'react-router-dom';
-import logo from '../assets/images/bloc_jams_logo.png';
-import '../styles/navbar.css';
+import logo from '../../assets/images/bloc_jams_logo.png';
+import './navbar.css';
 
 /*class Navbar extends Component {
   render() {

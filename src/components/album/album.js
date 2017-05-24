@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import Navbar from './navbar.js';
-import '../styles/home.css';
-import '../styles/album.css';
-import cover from '../assets/images/album_covers/01.png';
+import Navbar from '../navbar/navbar.js';
+import './album.css';
+import cover from '../../assets/images/album_covers/01.png';
 
 class Album extends Component {
   render() {

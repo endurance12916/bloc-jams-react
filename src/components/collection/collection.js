@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Navbar from './navbar.js'
-import '../styles/collection.css';
-import cover from '../assets/images/album_covers/01.png';
+import Navbar from '../navbar/navbar.js'
+import './collection.css';
+import cover from '../../assets/images/album_covers/01.png';
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 
 // The code below triggers Home component for some reason, to find out
