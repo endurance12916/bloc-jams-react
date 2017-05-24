@@ -4,6 +4,20 @@ import './album.css';
 import cover from '../../assets/images/album_covers/01.png';
 
 class Album extends Component {
+    constructor(props){
+        super(props);
+        const exampleAlbum = [
+                { number: 1, title: 'Blue', duration: '4:26' },
+                { number: 2, title: 'Green', duration: '3:14' },
+                { number: 3, title: 'Red', duration: '5:01' },
+                { number: 4, title: 'Pink', duration: '3:21'},
+                { number: 5, title: 'Magenta', duration: '2:15'}
+            ]
+        this.state = {
+            exampleAlbum
+        }
+    }
+
   render() {
     return (
         <section className="album-page">
@@ -20,6 +34,18 @@ class Album extends Component {
                     </div>
                 </section>
                 <table className="album-view-song-list">
+                    <tbody>    
+                    {this.state.exampleAlbum.map((song,i)=>{
+                        return(
+                            <tr className="album-view-song-item" key={i}>
+                            <td className="song-item-number">{this.state.exampleAlbum[i].number}</td>
+                            <td className="song-item-title">{this.state.exampleAlbum[i].title}</td>
+                            <td className="song-item-duration">{this.state.exampleAlbum[i].duration}</td>
+                            </tr>
+                        )
+                      })
+                    }
+                    </tbody>
                 </table>
             </main>
 
