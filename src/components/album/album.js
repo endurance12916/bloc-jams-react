@@ -4,6 +4,13 @@ import './album.css';
 import cover from '../../assets/images/album_covers/01.png';
 
 class Album extends Component {
+    constructor(){
+        super();
+
+        this.state = {
+            currentSongNumber: {}
+        }
+    }
 
     populateSongs = ()=>{
         const exampleAlbum = [
@@ -16,7 +23,7 @@ class Album extends Component {
         return(
         exampleAlbum.map((song,i)=>{
             return(
-                <tr className="album-view-song-item" key={i}>
+                <tr className="album-view-song-item" key={i} onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
                     <td className="song-item-number">{song.number}</td>
                     <td className="song-item-title">{song.title}</td>
                     <td className="song-item-duration">{song.duration}</td>
@@ -25,6 +32,20 @@ class Album extends Component {
         })
         )
     }
+
+    mouseEnter = (event) => {
+        const playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
+        let songNumberCell = event.target.parentElement.querySelector('.song-item-number');
+
+        if (event.target.parentElement.className === 'album-view-song-item') {
+            this.setState({currentSongNumber: songNumberCell.innerHTML});
+            songNumberCell.innerHTML = playButtonTemplate;
+         }
+    };
+
+    mouseLeave = (event) => {
+        event.target.parentElement.querySelector('.song-item-number').innerHTML = this.state.currentSongNumber;
+    };
 
     render() {
         return (
