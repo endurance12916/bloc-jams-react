@@ -3,6 +3,38 @@ import Navbar from '../navbar/navbar.js';
 import './home.css';
 
 class Home extends Component {
+
+    animatePoints = (points) => {
+        for (let point of points) {
+            point.style.opacity = 1;
+            point.style.transform = "scaleX(1) translateY(0)";
+            point.style.msTransform = "scaleX(1) translateY(0)";
+            point.style.WebkitTransform = "scaleX(1) translateY(0)";
+        }
+    };
+
+    scrollDown = (event) => {
+        const pointsArray = document.getElementsByClassName('point');
+        const sellingPoints = document.getElementsByClassName('selling-points')[0];
+        const scrollDistance = sellingPoints.getBoundingClientRect().top - window.innerHeight + 200;
+        // Automatically animate the points on a tall screen where scrolling can't trigger the animation
+        if (window.innerHeight > 950) {
+            this.animatePoints(pointsArray);
+        }
+        //  console.log("Current offset from the top is " + sellingPoints.getBoundingClientRect().top + " pixels");
+        if (document.documentElement.scrollTop || document.body.scrollTop >= scrollDistance) {
+            this.animatePoints(pointsArray);
+        }
+    }
+
+    componentDidMount() {
+        window.addEventListener("scroll", this.scrollDown);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("scroll", this.scrollDown)
+    }
+
   render() {
     return (
       <section className="landing">
@@ -30,54 +62,6 @@ class Home extends Component {
       </section>
     );
   }
-  
-
-  componentDidMount() {
-      let pointsArray = document.getElementsByClassName('point');
-
-      let animatePoints = function (points) {
-
-          let revealFirstPoint = function () {
-              points[0].style.opacity = 1;
-              points[0].style.transform = "scaleX(1) translateY(0)";
-              points[0].style.msTransform = "scaleX(1) translateY(0)";
-              points[0].style.WebkitTransform = "scaleX(1) translateY(0)";
-          };
-
-          let revealSecondPoint = function () {
-              points[1].style.opacity = 1;
-              points[1].style.transform = "scaleX(1) translateY(0)";
-              points[1].style.msTransform = "scaleX(1) translateY(0)";
-              points[1].style.WebkitTransform = "scaleX(1) translateY(0)";
-          };
-
-          let revealThirdPoint = function () {
-              points[2].style.opacity = 1;
-              points[2].style.transform = "scaleX(1) translateY(0)";
-              points[2].style.msTransform = "scaleX(1) translateY(0)";
-              points[2].style.WebkitTransform = "scaleX(1) translateY(0)";
-          };
-
-          revealFirstPoint();
-          revealSecondPoint();
-          revealThirdPoint();
-
-      };
-
-      let sellingPoints = document.getElementsByClassName('selling-points')[0];
-      let scrollDistance = sellingPoints.getBoundingClientRect().top - window.innerHeight + 200;
-
-      window.addEventListener("scroll", function (event) {
-          // Automatically animate the points on a tall screen where scrolling can't trigger the animation
-          if (window.innerHeight > 950) {
-              animatePoints(pointsArray);
-          }
-          //  console.log("Current offset from the top is " + sellingPoints.getBoundingClientRect().top + " pixels");
-          if (document.documentElement.scrollTop || document.body.scrollTop >= scrollDistance) {
-              animatePoints(pointsArray);
-          }
-      });
-    }
-  }
+}
 
 export default Home;
