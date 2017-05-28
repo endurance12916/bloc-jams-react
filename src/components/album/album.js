@@ -17,9 +17,9 @@ class Album extends Component {
         exampleAlbum.map((song,i)=>{
             return(
                 <tr className="album-view-song-item" key={i}>
-                    <td className="song-item-number">{exampleAlbum[i].number}</td>
-                    <td className="song-item-title">{exampleAlbum[i].title}</td>
-                    <td className="song-item-duration">{exampleAlbum[i].duration}</td>
+                    <td className="song-item-number">{song.number}</td>
+                    <td className="song-item-title">{song.title}</td>
+                    <td className="song-item-duration">{song.duration}</td>
                 </tr>
             )
         })
