@@ -21,15 +21,15 @@ class Album extends Component {
             { number: 5, title: 'Magenta', duration: '2:15' }
         ]
         return(
-        exampleAlbum.map((song,i)=>{
-            return(
-                <tr className="album-view-song-item" key={i} onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
-                    <td className="song-item-number" data-song-number={song.number}>{song.number}</td>
-                    <td className="song-item-title">{song.title}</td>
-                    <td className="song-item-duration">{song.duration}</td>
-                </tr>
-            )
-        })
+            exampleAlbum.map((song,i)=>{
+                return(
+                    <tr className="album-view-song-item" key={i} onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
+                        <td className="song-item-number" data-song-number={song.number}>{song.number}</td>
+                        <td className="song-item-title">{song.title}</td>
+                        <td className="song-item-duration">{song.duration}</td>
+                    </tr>
+                )
+            })
         )
     }
 
