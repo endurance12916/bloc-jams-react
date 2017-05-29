@@ -24,7 +24,7 @@ class Album extends Component {
         exampleAlbum.map((song,i)=>{
             return(
                 <tr className="album-view-song-item" key={i} onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
-                    <td className="song-item-number">{song.number}</td>
+                    <td className="song-item-number" data-song-number={song.number}>{song.number}</td>
                     <td className="song-item-title">{song.title}</td>
                     <td className="song-item-duration">{song.duration}</td>
                 </tr>
@@ -38,7 +38,7 @@ class Album extends Component {
         let songNumberCell = event.target.parentElement.querySelector('.song-item-number');
 
         if (event.target.parentElement.className === 'album-view-song-item') {
-            this.setState({currentSongNumber: songNumberCell.innerHTML});
+            this.setState({currentSongNumber: songNumberCell.getAttribute('data-song-number')});
             songNumberCell.innerHTML = playButtonTemplate;
          }
     };
