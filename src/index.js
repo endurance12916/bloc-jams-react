@@ -16,7 +16,8 @@ import Album from './components/album/album.js'
 import { BrowserRouter, Route } from 'react-router-dom'
 
 // Code below doesn't work, why?
-/*const Root = () => {
+// change to class Root
+/*const Root = () => { <-- stateless react component, if need state, need to have class
   return (
     <BrowserRouter>
       <div>

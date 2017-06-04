@@ -13,6 +13,7 @@ class Album extends Component {
     }
 
     populateSongs = ()=>{
+        //maybe put currentSongNumber in here
         const exampleAlbum = [
             { number: 1, title: 'Blue', duration: '4:26' },
             { number: 2, title: 'Green', duration: '3:14' },
@@ -39,6 +40,8 @@ class Album extends Component {
 
         if (event.target.parentElement.className === 'album-view-song-item') {
             this.setState({currentSongNumber: songNumberCell.getAttribute('data-song-number')});
+            // why does this still work without defining currentSongNumber in this.state?
+            console.log(this.state.currentSongNumber)
             songNumberCell.innerHTML = playButtonTemplate;
          }
     };
