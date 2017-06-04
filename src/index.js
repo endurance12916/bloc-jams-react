@@ -32,11 +32,11 @@ import { BrowserRouter, Route } from 'react-router-dom'
 
 ReactDOM.render((
     <BrowserRouter>
-      <div>
-        <Route exact path="/" component={App} />
+      <App>
+        <Route exact path="/" component={Home} />
         <Route path="/home" component={Home} />
         <Route path="/collection" component={Collection} />
         <Route path="/album" component={Album} />
-      </div>
+      </App>
     </BrowserRouter>
 ), document.getElementById('root'));

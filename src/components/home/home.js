@@ -1,10 +1,27 @@
 import React, { Component } from 'react';
-import Navbar from '../navbar/navbar.js';
+// import Navbar from '../navbar/navbar.js';
 import './home.css';
+/*
+class HomeRoute extends Component {
+  render() {
+    const { currentAlbum, onButtonClicked, ...rest } = this.props;
+    
+    return (
+      <Route {...rest} render={props => (
+        <Home
+          currentAlbum={currentAlbum}
+          onButtonClicked={onButtonClicked}
+          {...props}
+        />
+      )}
+      />
+    )
+  }
+}*/
 
 class Home extends Component {
 
-    animatePoints = (points) => {
+    animatePoints(points) {
         for (let point of points) {
             point.style.opacity = 1;
             point.style.transform = "scaleX(1) translateY(0)";
@@ -38,7 +55,6 @@ class Home extends Component {
     render() {
         return (
         <section className="landing">
-            <Navbar/>
             <section className="hero-content"> 
                 <h1 className="hero-title">Turn the music up!</h1>
             </section>

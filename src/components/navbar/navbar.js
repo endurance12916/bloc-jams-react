@@ -11,7 +11,7 @@ class Navbar extends Component {
   render() {
     return (
         <nav className="navbar"> 
-          <Link to="/home" className="logo">
+          <Link to="/" className="logo">
             <img src={logo} alt="bloc jams logo" />
           </Link>
           <div className="links-container">

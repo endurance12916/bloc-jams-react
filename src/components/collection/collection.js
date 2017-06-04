@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Navbar from '../navbar/navbar.js'
+// import Navbar from '../navbar/navbar.js'
 import './collection.css';
 import cover from '../../assets/images/album_covers/01.png';
 import { Link } from 'react-router-dom'
@@ -34,7 +34,6 @@ class Collection extends Component {
   render() {
     return (
       <section className="landing">
-        <Navbar/>
         <div className="collection-page">
           <section className="album-covers container clearfix">{
               this.state.albumArray.map((album,i)=>{

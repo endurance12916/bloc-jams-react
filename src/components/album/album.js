@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Navbar from '../navbar/navbar.js';
+// import Navbar from '../navbar/navbar.js';
 import './album.css';
 import cover from '../../assets/images/album_covers/01.png';
 
@@ -12,7 +12,7 @@ class Album extends Component {
         }
     }
 
-    populateSongs = ()=>{
+    populateSongs() {
         //maybe put currentSongNumber in here
         const exampleAlbum = [
             { number: 1, title: 'Blue', duration: '4:26' },
@@ -41,7 +41,7 @@ class Album extends Component {
         if (event.target.parentElement.className === 'album-view-song-item') {
             this.setState({currentSongNumber: songNumberCell.getAttribute('data-song-number')});
             // why does this still work without defining currentSongNumber in this.state?
-            console.log(this.state.currentSongNumber)
+            // console.log(this.state.currentSongNumber)
             songNumberCell.innerHTML = playButtonTemplate;
          }
     };
@@ -53,7 +53,6 @@ class Album extends Component {
     render() {
         return (
             <section className="album-page">
-                <Navbar />
                 <main className="album-view container narrow">
                     <section className="clearfix">
                         <div className="column half">
