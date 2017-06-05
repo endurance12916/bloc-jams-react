@@ -23,22 +23,33 @@ class Collection extends Component {
             </div>
             </div>
             )
-        const albumArray = [];
-        while (albumArray.length<12) {albumArray.push(album)}
+        // const albumArray = [];
+        // while (albumArray.length<12) {albumArray.push(album)}
 
         this.state = {
-            albumArray
+            // albumArray
+            album
         };
+        // this.populatePage.bind(this);
     }
+
+  populatePage(){
+        const albumArray = [];
+        // console.log(this.state.album)
+        while (albumArray.length<12) {albumArray.push(this.state.album)};
+        return( 
+        albumArray.map((album,i)=>{
+            return (<div key={i}>{album}</div>);
+        }))
+  };
 
   render() {
     return (
       <section className="landing">
         <div className="collection-page">
-          <section className="album-covers container clearfix">{
-              this.state.albumArray.map((album,i)=>{
-              return <div key={i}>{album}</div>})
-              }
+          <section className="album-covers container clearfix">{this.populatePage()}
+              {/*this.state.albumArray.map((album,i)=>{
+              return <div key={i}>{album}</div>})*/}
           </section>
         </div>
       </section>
