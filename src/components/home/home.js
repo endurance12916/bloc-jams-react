@@ -1,23 +1,5 @@
 import React, { Component } from 'react';
-// import Navbar from '../navbar/navbar.js';
 import './home.css';
-/*
-class HomeRoute extends Component {
-  render() {
-    const { currentAlbum, onButtonClicked, ...rest } = this.props;
-    
-    return (
-      <Route {...rest} render={props => (
-        <Home
-          currentAlbum={currentAlbum}
-          onButtonClicked={onButtonClicked}
-          {...props}
-        />
-      )}
-      />
-    )
-  }
-}*/
 
 class Home extends Component {
 

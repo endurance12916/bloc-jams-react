@@ -5,14 +5,6 @@ import Home from './components/home/home.js'
 import Collection from './components/collection/collection.js'
 import Album from './components/album/album.js'
 
-// import Navbar from './components/navbar.js'
-
-// original code from create-react-app:
-// ReactDOM.render(
-//   <App />,
-//   document.getElementById('root')
-// );
-
 import { BrowserRouter, Route } from 'react-router-dom'
 
 // Code below doesn't work, why?

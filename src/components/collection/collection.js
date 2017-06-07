@@ -47,10 +47,7 @@ class Collection extends Component {
     return (
       <section className="landing">
         <div className="collection-page">
-          <section className="album-covers container clearfix">{this.populatePage()}
-              {/*this.state.albumArray.map((album,i)=>{
-              return <div key={i}>{album}</div>})*/}
-          </section>
+          <section className="album-covers container clearfix">{this.populatePage()}</section>
         </div>
       </section>
     );
