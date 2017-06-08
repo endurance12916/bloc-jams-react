@@ -38,9 +38,6 @@ class Album extends Component {
 
     songNumberCellContent(song) {
         if (song.number === parseInt(this.state.songBeingPlayed,0)){
-            return (<a className="album-song-button"><span className="ion-play"></span></a>)
-        }
-        else if (song.number === parseInt(this.state.songBeingPaused,0)){
             return (<a className="album-song-button"><span className="ion-pause"></span></a>)
         }
         else if (song.number === parseInt(this.state.currentSongNumber,0)){
@@ -51,11 +48,6 @@ class Album extends Component {
     }
 
     mouseEnter = (song, event) => {
-        // let songNumberCell = event.target.parentNode.querySelector('.song-item-number');
-
-        // if (event.target.parentNode.className === 'album-view-song-item') {
-        //     this.setState({currentSongNumber: songNumberCell.getAttribute('data-song-number')});
-        //  }
          this.setState({currentSongNumber: song.number});
     };
 
