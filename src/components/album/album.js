@@ -66,7 +66,7 @@ class Album extends Component {
         // if click on the song being paused, resume it; otherwise play the current song && reverse the previous song's cell back to number
 
         this.state.currentSongNumber === this.state.songBeingPlayed
-            ? (this.setState({songBeingPaused: this.state.currentSongNumber, songBeingPlayed:{}}))
+            ? this.setState({songBeingPaused: this.state.currentSongNumber, songBeingPlayed:{}})
             : this.setState({songBeingPlayed: this.state.currentSongNumber, songBeingPaused: {}});
     }
 
