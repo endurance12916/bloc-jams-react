@@ -3,6 +3,14 @@ import React, { Component } from 'react';
 import './album.css';
 import cover from '../../assets/images/album_covers/01.png';
 
+const exampleAlbum = [
+    { number: 1, title: 'Blue', duration: '4:26' },
+    { number: 2, title: 'Green', duration: '3:14' },
+    { number: 3, title: 'Red', duration: '5:01' },
+    { number: 4, title: 'Pink', duration: '3:21' },
+    { number: 5, title: 'Magenta', duration: '2:15' }
+]
+
 class Album extends Component {
     constructor(){
         super();
@@ -13,19 +21,15 @@ class Album extends Component {
     }
 
     populateSongs() {
-        //maybe put currentSongNumber in here
-        const exampleAlbum = [
-            { number: 1, title: 'Blue', duration: '4:26' },
-            { number: 2, title: 'Green', duration: '3:14' },
-            { number: 3, title: 'Red', duration: '5:01' },
-            { number: 4, title: 'Pink', duration: '3:21' },
-            { number: 5, title: 'Magenta', duration: '2:15' }
-        ]
+        // is it better to put const example album here or to above?
         return(
             exampleAlbum.map((song,i)=>{
+                const songNumberCellContent = song.number === parseInt(this.state.currentSongNumber,0)
+                    ? (<a className="album-song-button"><span className="ion-play"></span></a>)
+                    : song.number;
                 return(
                     <tr className="album-view-song-item" key={i} onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
-                        <td className="song-item-number" data-song-number={song.number}>{song.number}</td>
+                        <td className="song-item-number" data-song-number={song.number}>{songNumberCellContent}</td>
                         <td className="song-item-title">{song.title}</td>
                         <td className="song-item-duration">{song.duration}</td>
                     </tr>
@@ -35,19 +39,15 @@ class Album extends Component {
     }
 
     mouseEnter = (event) => {
-        const playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
-        let songNumberCell = event.target.parentElement.querySelector('.song-item-number');
+        let songNumberCell = event.target.parentNode.querySelector('.song-item-number');
 
-        if (event.target.parentElement.className === 'album-view-song-item') {
+        if (event.target.parentNode.className === 'album-view-song-item') {
             this.setState({currentSongNumber: songNumberCell.getAttribute('data-song-number')});
-            // why does this still work without defining currentSongNumber in this.state?
-            // console.log(this.state.currentSongNumber)
-            songNumberCell.innerHTML = playButtonTemplate;
          }
     };
 
     mouseLeave = (event) => {
-        event.target.parentElement.querySelector('.song-item-number').innerHTML = this.state.currentSongNumber;
+        this.setState({currentSongNumber:{}})
     };
 
     render() {
