@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import Navbar from '../navbar/navbar.js';
 import './album.css';
 import cover from '../../assets/images/album_covers/01.png';
 
@@ -27,7 +26,7 @@ class Album extends Component {
         return(
             exampleAlbum.map((song,i)=>{
                 return(
-                    <tr className="album-view-song-item" key={i} onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
+                    <tr className="album-view-song-item" key={i} onMouseEnter={this.mouseEnter.bind(this,song)} onMouseLeave={this.mouseLeave}>
                         <td className="song-item-number" data-song-number={song.number} onMouseDown={this.mouseClick}>{this.songNumberCellContent(song)}</td>
                         <td className="song-item-title">{song.title}</td>
                         <td className="song-item-duration">{song.duration}</td>
@@ -51,12 +50,13 @@ class Album extends Component {
         }
     }
 
-    mouseEnter = (event) => {
-        let songNumberCell = event.target.parentNode.querySelector('.song-item-number');
+    mouseEnter = (song, event) => {
+        // let songNumberCell = event.target.parentNode.querySelector('.song-item-number');
 
-        if (event.target.parentNode.className === 'album-view-song-item') {
-            this.setState({currentSongNumber: songNumberCell.getAttribute('data-song-number')});
-         }
+        // if (event.target.parentNode.className === 'album-view-song-item') {
+        //     this.setState({currentSongNumber: songNumberCell.getAttribute('data-song-number')});
+        //  }
+         this.setState({currentSongNumber: song.number});
     };
 
     mouseLeave = (event) => {
@@ -69,12 +69,13 @@ class Album extends Component {
 
         // if a song is currently being played (songBeingPlayed: {n}, songBeingPaused: {}):
         // if click on the song being played, paused it; otherwise play the current song && stop the previous song and reverse the cell back to number
-        this.state.currentSongNumber === this.state.songBeingPlayed
-            ? (this.setState({songBeingPaused: this.state.currentSongNumber, songBeingPlayed:{}}))
-            : this.setState({songBeingPlayed: this.state.currentSongNumber, songBeingPaused: {}});
 
         // if a song is currently being paused (songBeingPlayed: {}, songBeingPaused: {n})
         // if click on the song being paused, resume it; otherwise play the current song && reverse the previous song's cell back to number
+
+        this.state.currentSongNumber === this.state.songBeingPlayed
+            ? (this.setState({songBeingPaused: this.state.currentSongNumber, songBeingPlayed:{}}))
+            : this.setState({songBeingPlayed: this.state.currentSongNumber, songBeingPaused: {}});
     }
 
     render() {
