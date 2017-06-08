@@ -16,7 +16,9 @@ class Album extends Component {
         super();
 
         this.state = {
-            currentSongNumber: {}
+            currentSongNumber: {},
+            songBeingPlayed: {},
+            songBeingPaused: {}
         }
     }
 
@@ -24,18 +26,29 @@ class Album extends Component {
         // is it better to put const example album here or to above?
         return(
             exampleAlbum.map((song,i)=>{
-                const songNumberCellContent = song.number === parseInt(this.state.currentSongNumber,0)
-                    ? (<a className="album-song-button"><span className="ion-play"></span></a>)
-                    : song.number;
                 return(
                     <tr className="album-view-song-item" key={i} onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
-                        <td className="song-item-number" data-song-number={song.number}>{songNumberCellContent}</td>
+                        <td className="song-item-number" data-song-number={song.number} onMouseDown={this.mouseClick}>{this.songNumberCellContent(song)}</td>
                         <td className="song-item-title">{song.title}</td>
                         <td className="song-item-duration">{song.duration}</td>
                     </tr>
                 )
             })
         )
+    }
+
+    songNumberCellContent(song) {
+        if (song.number === parseInt(this.state.songBeingPlayed,0)){
+            return (<a className="album-song-button"><span className="ion-play"></span></a>)
+        }
+        else if (song.number === parseInt(this.state.songBeingPaused,0)){
+            return (<a className="album-song-button"><span className="ion-pause"></span></a>)
+        }
+        else if (song.number === parseInt(this.state.currentSongNumber,0)){
+            return (<a className="album-song-button"><span className="ion-play"></span></a>)
+        } else {
+            return song.number
+        }
     }
 
     mouseEnter = (event) => {
@@ -49,6 +62,20 @@ class Album extends Component {
     mouseLeave = (event) => {
         this.setState({currentSongNumber:{}})
     };
+
+    mouseClick = (event) => {
+        // starting status: no song played, no song paused (songBeingPlayed: {}, songBeingPaused: {}):
+        // if click on a song -> play that song
+
+        // if a song is currently being played (songBeingPlayed: {n}, songBeingPaused: {}):
+        // if click on the song being played, paused it; otherwise play the current song && stop the previous song and reverse the cell back to number
+        this.state.currentSongNumber === this.state.songBeingPlayed
+            ? (this.setState({songBeingPaused: this.state.currentSongNumber, songBeingPlayed:{}}))
+            : this.setState({songBeingPlayed: this.state.currentSongNumber, songBeingPaused: {}});
+
+        // if a song is currently being paused (songBeingPlayed: {}, songBeingPaused: {n})
+        // if click on the song being paused, resume it; otherwise play the current song && reverse the previous song's cell back to number
+    }
 
     render() {
         return (
