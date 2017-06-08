@@ -25,7 +25,7 @@ class Album extends Component {
             exampleAlbum.map((song,i)=>{
                 return(
                     <tr className="album-view-song-item" key={i} onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
-                        <td className="song-item-number" data-song-number={song.number}>{song.number}</td>
+                        <td className="song-item-number" data-song-number={song.number}>{switchCell()}</td>
                         <td className="song-item-title">{song.title}</td>
                         <td className="song-item-duration">{song.duration}</td>
                     </tr>
@@ -34,15 +34,29 @@ class Album extends Component {
         )
     }
 
-    mouseEnter = (event) => {
-        const playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
-        let songNumberCell = event.target.parentElement.querySelector('.song-item-number');
+    switchCell(){
+        // console.log(ReactDOM.findDOMNode('Album').getElementByClassName('song-item-number')[0].getAttribute('data-song-number'));
+        let songNumber = ReactDOM.findDOMNode('Album').getElementByClassName('song-item-number')[0].getAttribute('data-song-number');
+        if (this.state.currentSongNumber!==songNumber) {
+            this.setState({currentSongNumber: songNumber})
+            return songNumber;
+        } else {
+            return ('<a class="album-song-button"><span class="ion-play"></span></a>')
+        }
+    }
 
-        if (event.target.parentElement.className === 'album-view-song-item') {
-            this.setState({currentSongNumber: songNumberCell.getAttribute('data-song-number')});
+
+    mouseEnter = (event) => {
+        // const playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
+        // let songNumberCell = event.target.parentElement.querySelector('.song-item-number');
+
+        // if (event.target.parentElement.className === 'album-view-song-item') {
+            // this.setState({currentSongNumber: songNumberCell.getAttribute('data-song-number')});
             // why does this still work without defining currentSongNumber in this.state?
             // console.log(this.state.currentSongNumber)
-            songNumberCell.innerHTML = playButtonTemplate;
+            // songNumberCell.innerHTML = playButtonTemplate;
+
+        switchCell
          }
     };
 
