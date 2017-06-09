@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import buzz from 'buzz';
 import App from './App.js';
 import Home from './components/home/home.js'
 import Collection from './components/collection/collection.js'
