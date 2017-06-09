@@ -5,6 +5,7 @@ import App from './App.js';
 import Home from './components/home/home.js'
 import Collection from './components/collection/collection.js'
 import Album from './components/album/album.js'
+import PlayerBar from './components/album/player_bar.js'
 
 import { BrowserRouter, Route } from 'react-router-dom'
 
@@ -29,7 +30,17 @@ ReactDOM.render((
         <Route exact path="/" component={Home} />
         <Route path="/home" component={Home} />
         <Route path="/collection" component={Collection} />
-        <Route path="/album" component={Album} />
+        <Route path="/album" component={()=>(<div><Album/><PlayerBar/></div>)} />
       </App>
     </BrowserRouter>
 ), document.getElementById('root'));
+
+        //   <Route path ="" render={props => (
+        //   <PlayerBar
+        //     currentSongNumber={this.state.currentSongNumber}
+        //     songBeingPlayed={this.state.songBeingPlayed}
+        //     songBeingPaused={this.state.songBeingPaused}
+        //     {...props}
+        //   />
+        // )}
+        // />

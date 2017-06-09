@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './album.css';
-import PlayerBar from './player_bar.js';
 import cover from '../../assets/images/album_covers/01.png';
 
 const exampleAlbum = [
@@ -16,9 +15,7 @@ class Album extends Component {
         super();
 
         this.state = {
-            currentSongNumber: {},
-            songBeingPlayed: {},
-            songBeingPaused: {}
+            // didn't put anything in here but still works, and if I delete this.state the page would not show, why?
         }
     }
 
@@ -91,8 +88,6 @@ class Album extends Component {
                         </tbody>
                     </table>
                 </main>
-
-                <PlayerBar />
             </section>
         )
     }

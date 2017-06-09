@@ -6,9 +6,7 @@ class PlayerBar extends Component {
         super();
 
         this.state = {
-            currentSongNumber: {},
-            songBeingPlayed: {},
-            songBeingPaused: {}
+
         }
     }
     render() {
