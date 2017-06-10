@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
 import './album.css';
 import cover from '../../assets/images/album_covers/01.png';
-
-const exampleAlbum = [
-    { number: 1, title: 'Blue', duration: '4:26' },
-    { number: 2, title: 'Green', duration: '3:14' },
-    { number: 3, title: 'Red', duration: '5:01' },
-    { number: 4, title: 'Pink', duration: '3:21' },
-    { number: 5, title: 'Magenta', duration: '2:15' }
-]
+import exampleAlbum from '../fixtures/fixtures.js';
+import buzz from 'buzz';
 
 class Album extends Component {
     constructor(){
@@ -16,16 +10,19 @@ class Album extends Component {
 
         this.state = {
             // didn't put anything in here but still works, and if I delete this.state the page would not show, why?
+            currentSongNumber: {},
+            songBeingPlayed: {},
+            songBeingPaused: {},
+            currentSoundFile:{}
         }
     }
 
     populateSongs() {
-        // is it better to put const example album here or to above?
         return(
             exampleAlbum.map((song,i)=>{
                 return(
                     <tr className="album-view-song-item" key={i} onMouseEnter={this.mouseEnter.bind(this,song)} onMouseLeave={this.mouseLeave}>
-                        <td className="song-item-number" data-song-number={song.number} onMouseDown={this.mouseClick}>{this.songNumberCellContent(song)}</td>
+                        <td className="song-item-number" onMouseUp={this.mouseClick.bind(this,song)}>{this.songNumberCellContent(song)}</td>
                         <td className="song-item-title">{song.title}</td>
                         <td className="song-item-duration">{song.duration}</td>
                     </tr>
@@ -53,7 +50,7 @@ class Album extends Component {
         this.setState({currentSongNumber:{}})
     };
 
-    mouseClick = (event) => {
+    mouseClick = (song, event) => {
         // starting status: no song played, no song paused (songBeingPlayed: {}, songBeingPaused: {}):
         // if click on a song -> play that song
 
@@ -62,11 +59,29 @@ class Album extends Component {
 
         // if a song is currently being paused (songBeingPlayed: {}, songBeingPaused: {n})
         // if click on the song being paused, resume it; otherwise play the current song && reverse the previous song's cell back to number
+        console.log(this.state.currentSongNumber)
 
+        // doesn't work on the first click, why?
         this.state.currentSongNumber === this.state.songBeingPlayed
             ? this.setState({songBeingPaused: this.state.currentSongNumber, songBeingPlayed:{}})
-            : this.setState({songBeingPlayed: this.state.currentSongNumber, songBeingPaused: {}});
+            : this.setState({songBeingPlayed: this.state.currentSongNumber, songBeingPaused: {}})
+    
+
+        console.log(this.state.currentSongNumber)
+        console.log(this.state.songBeingPlayed)
+        console.log(this.state.songBeingPaused)
+        // this.setSong(song)
     }
+
+    // setSong(song) {
+    //     this.setState({currentSoundFile: new buzz.sound(song.audioUrl, {
+    //         formats: [ 'mp3' ],
+    //         preload: true
+    //         })
+    //     })
+    //     console.log(this.state.currentSoundFile)
+    //     this.state.currentSoundFile.play();
+    // }
 
     render() {
         return (

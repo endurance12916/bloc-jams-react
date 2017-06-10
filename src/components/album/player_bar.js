@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import './player_bar.css';
+import exampleAlbum from '../fixtures/fixtures.js';
 
 class PlayerBar extends Component {
     constructor(){
         super();
 
         this.state = {
-
+            
         }
     }
+
     render() {
         return (
             <section className="player-bar">
