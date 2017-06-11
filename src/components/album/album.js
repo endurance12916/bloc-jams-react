@@ -3,18 +3,23 @@ import './album.css';
 import cover from '../../assets/images/album_covers/01.png';
 import exampleAlbum from '../fixtures/fixtures.js';
 import buzz from 'buzz';
+import PlayerBar from './player_bar.js';
 
 class Album extends Component {
     constructor(){
         super();
 
         this.state = {
-            // didn't put anything in here but still works, and if I delete this.state the page would not show, why?
+            currentSongObject:{},
             currentSongNumber: {},
             songBeingPlayed: {},
             songBeingPaused: {},
-            currentSoundFile:{}
+            currentSoundFile:{},
+            currentVolume:80
         }
+    this.populateSongs = this.populateSongs.bind(this)
+    this.setSong = this.setSong.bind(this)
+    this.setVolume = this.setVolume.bind(this)
     }
 
     populateSongs() {
@@ -43,7 +48,7 @@ class Album extends Component {
     }
 
     mouseEnter = (song, event) => {
-         this.setState({currentSongNumber: song.number});
+        this.setState({currentSongNumber: song.number});
     };
 
     mouseLeave = (event) => {
@@ -59,29 +64,57 @@ class Album extends Component {
 
         // if a song is currently being paused (songBeingPlayed: {}, songBeingPaused: {n})
         // if click on the song being paused, resume it; otherwise play the current song && reverse the previous song's cell back to number
-        console.log(this.state.currentSongNumber)
 
+        this.setSong(song);
+
+        // console.log(this.state.currentSoundFile)
+        this.state.songBeingPaused==={}
+            ? this.state.currentSoundFile.pause()
+            : this.state.currentSoundFile.play()
+
+        console.log(this.state.currentSoundFile.isPaused())
+        console.log(this.state.currentSoundFile.getDuration())
+    }
+
+    setSong(song) {
+        // this.setState({currentSoundFile: new buzz.sound(song.audioUrl, {
+        //     formats: [ 'mp3' ],
+        //     preload: true
+        //     })
+        // })
+        
         // doesn't work on the first click, why?
         this.state.currentSongNumber === this.state.songBeingPlayed
             ? this.setState({songBeingPaused: this.state.currentSongNumber, songBeingPlayed:{}})
             : this.setState({songBeingPlayed: this.state.currentSongNumber, songBeingPaused: {}})
-    
 
-        console.log(this.state.currentSongNumber)
-        console.log(this.state.songBeingPlayed)
-        console.log(this.state.songBeingPaused)
-        // this.setSong(song)
+        const sound = new buzz.sound(song.audioUrl, {
+            formats: [ 'mp3' ],
+            preload: true
+            })
+        
+        this.setState({currentSongObject:song})
+        this.setState({currentSoundFile:sound})
+        console.log(this.state.currentSoundFile.isPaused())
+        
+        this.setVolume(song, this.state.currentVolume)
     }
 
-    // setSong(song) {
-    //     this.setState({currentSoundFile: new buzz.sound(song.audioUrl, {
-    //         formats: [ 'mp3' ],
-    //         preload: true
-    //         })
-    //     })
-    //     console.log(this.state.currentSoundFile)
-    //     this.state.currentSoundFile.play();
-    // }
+    setVolume(song, volume) {
+        if (this.state.currentSoundFile) {
+            this.state.currentSoundFile.setVolume(volume);
+        }
+    }
+
+    nextSong() {
+        this.setSong(exampleAlbum[this.state.currentSongNumber-1+1]);
+        this.setState({songBeingPlayed:this.state.songBeingPlayed+1, songBeingPaused:{}});
+    }
+
+    previousSong() {
+        this.setSong(exampleAlbum[this.state.currentSongNumber-1-1]);
+        this.setState({songBeingPlayed:this.state.songBeingPlayed-1, songBeingPaused:{}});
+    }
 
     render() {
         return (
@@ -103,6 +136,19 @@ class Album extends Component {
                         </tbody>
                     </table>
                 </main>
+
+                <PlayerBar
+                currentSongObject={this.state.currentSongObject}
+                currentSongNumber={this.state.currentSongNumber}
+                songBeingPlayed={this.state.songBeingPlayed}
+                songBeingPaused={this.state.songBeingPaused}
+                currentSoundFile={this.state.currentSoundFile}
+                currentVolume={this.state.currentVolume}
+                setSong={this.setSong}
+                nextSong={this.nextSong}
+                previousSong={this.previousSong}
+                setVolume={this.setVolume}
+                />
             </section>
         )
     }

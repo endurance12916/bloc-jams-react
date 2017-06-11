@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import buzz from 'buzz';
+// import buzz from 'buzz';
 import App from './App.js';
 import Home from './components/home/home.js'
 import Collection from './components/collection/collection.js'
 import Album from './components/album/album.js'
-import PlayerBar from './components/album/player_bar.js'
+// import PlayerBar from './components/album/player_bar.js'
 
 import { BrowserRouter, Route } from 'react-router-dom'
 
@@ -30,7 +30,8 @@ ReactDOM.render((
         <Route exact path="/" component={Home} />
         <Route path="/home" component={Home} />
         <Route path="/collection" component={Collection} />
-        <Route path="/album" component={()=>(<div><Album/><PlayerBar/></div>)} />
+        {/*<Route path="/album" component={()=>(<div><Album/><PlayerBar/></div>)} />*/}
+        <Route path="/album" component={Album} />
       </App>
     </BrowserRouter>
 ), document.getElementById('root'));

@@ -3,12 +3,18 @@ import './player_bar.css';
 import exampleAlbum from '../fixtures/fixtures.js';
 
 class PlayerBar extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
 
         this.state = {
             
         }
+    }
+
+    mouseClick(){
+        this.props.songBeingPlayed==={}
+        ? this.props.setSong(this.props.songBeingPaused)
+        : this.props.setSong(this.props.songBeingPlayed)
     }
 
     render() {
@@ -19,7 +25,7 @@ class PlayerBar extends Component {
                         <a className="previous">
                             <span className="ion-skip-backward"></span>
                         </a>
-                        <a className="play-pause">
+                        <a className="play-pause" onMouseUp={this.mouseClick.bind(this)}>
                             <span className="ion-play"></span>
                         </a>
                         <a className="next">
@@ -27,7 +33,7 @@ class PlayerBar extends Component {
                         </a>
                     </div>
                     <div className="control-group currently-playing">
-                        <h2 className="song-name"></h2>
+                        <h2 className="song-name">{this.props.currentSongObject.title}</h2>
                         <div className="seek-control">
                             <div className="seek-bar">
                                 <div className="fill"></div>
