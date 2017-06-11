@@ -18,9 +18,9 @@ class PlayerBar extends Component {
     }
 
     updateSeekBarWhileSongPlays() {
-        if (currentSoundFile) {
+        if (this.props.currentSoundFile) {
             // #10
-            currentSoundFile.bind('timeupdate', function (event) {
+            this.props.currentSoundFile.bind('timeupdate', function (event) {
                 // #11
                 let seekBarFillRatio = this.getTime() / this.getDuration();
                 let $seekBar = $('.seek-control .seek-bar');
@@ -55,7 +55,7 @@ class PlayerBar extends Component {
             let seekBarFillRatio = offsetX / barWidth;
 
             if ($(this).parent().attr('class') == 'seek-control') {
-                seek(seekBarFillRatio * currentSoundFile.getDuration());
+                seek(seekBarFillRatio * this.props.currentSoundFile.getDuration());
             } else {
                 setVolume(seekBarFillRatio * 100);
             }
@@ -73,7 +73,7 @@ class PlayerBar extends Component {
                 let seekBarFillRatio = offsetX / barWidth;
 
                 if ($seekBar.parent().attr('class') == 'seek-control') {
-                    seek(seekBarFillRatio * currentSoundFile.getDuration());
+                    seek(seekBarFillRatio * this.props.currentSoundFile.getDuration());
                 } else {
                     setVolume(seekBarFillRatio);
                 }
