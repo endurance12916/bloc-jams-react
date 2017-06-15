@@ -65,44 +65,48 @@ class Album extends Component {
         // if a song is currently being paused (songBeingPlayed: {}, songBeingPaused: {n})
         // if click on the song being paused, resume it; otherwise play the current song && reverse the previous song's cell back to number
 
-        this.setSong(song);
+        let currentSoundFile = this.setSong(song);
 
-        // console.log(this.state.currentSoundFile)
-        this.state.songBeingPaused==={}
-            ? this.state.currentSoundFile.pause()
-            : this.state.currentSoundFile.play()
+        console.log(currentSoundFile)
+        console.log(this.state.songBeingPaused)
+        
+        // this.state.songBeingPaused==={}
+        //     ? currentSoundFile.play()
+        //     : currentSoundFile.pause()
+        
+        console.log(currentSoundFile.isPaused())
 
-        console.log(this.state.currentSoundFile.isPaused())
-        console.log(this.state.currentSoundFile.getDuration())
+        currentSoundFile.isPaused()
+            ? currentSoundFile.play()
+            : currentSoundFile.pause()
+
+        console.log(currentSoundFile.isPaused())
+        console.log(currentSoundFile.getDuration())
     }
 
     setSong(song) {
-        // this.setState({currentSoundFile: new buzz.sound(song.audioUrl, {
-        //     formats: [ 'mp3' ],
-        //     preload: true
-        //     })
-        // })
         
-        // doesn't work on the first click, why?
+        // doesn't work on the first click, why? --> setState doesn't do it immediately. better to pass a return and define a variable in the other functino (let currentSoundFile = this.setSong(song);)
+        this.setState({currentSongObject:song})
+
+        const sound = new buzz.sound(song.audioUrl, {
+            preload: true
+        })
+        
+        this.setState({currentSoundFile:sound})
+
         this.state.currentSongNumber === this.state.songBeingPlayed
             ? this.setState({songBeingPaused: this.state.currentSongNumber, songBeingPlayed:{}})
             : this.setState({songBeingPlayed: this.state.currentSongNumber, songBeingPaused: {}})
+        
+        this.setVolume(sound, this.state.currentVolume)
 
-        const sound = new buzz.sound(song.audioUrl, {
-            formats: [ 'mp3' ],
-            preload: true
-            })
-        
-        this.setState({currentSongObject:song})
-        this.setState({currentSoundFile:sound})
-        console.log(this.state.currentSoundFile.isPaused())
-        
-        this.setVolume(song, this.state.currentVolume)
+        return sound
     }
 
-    setVolume(song, volume) {
-        if (this.state.currentSoundFile) {
-            this.state.currentSoundFile.setVolume(volume);
+    setVolume(sound, volume) {
+        if (sound) {
+            sound.setVolume(volume);
         }
     }
 
@@ -142,7 +146,7 @@ class Album extends Component {
                 currentSongNumber={this.state.currentSongNumber}
                 songBeingPlayed={this.state.songBeingPlayed}
                 songBeingPaused={this.state.songBeingPaused}
-                currentSoundFile={this.state.currentSoundFile}
+                
                 currentVolume={this.state.currentVolume}
                 setSong={this.setSong}
                 nextSong={this.nextSong}
