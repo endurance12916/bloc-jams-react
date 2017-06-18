@@ -1,6 +1,9 @@
+// currently putting this in album.js. Will separate after all buttons function
+
 import React, { Component } from 'react';
 import './player_bar.css';
 import exampleAlbum from '../fixtures/fixtures.js';
+import buzz from 'buzz';
 
 class PlayerBar extends Component {
     constructor(props){
@@ -10,9 +13,14 @@ class PlayerBar extends Component {
             
         }
     }
-
+    setVolume(sound, volume) {
+        if (sound) {
+            sound.setVolume(volume);
+        }
+    }
     mouseClick(){
-        this.props.songBeingPlayed==={}
+        Object.getOwnPropertyNames(this.props.songBeingPlayed).length === 0
+        // this.props.songBeingPlayed==={}
         ? this.props.setSong(this.props.songBeingPaused)
         : this.props.setSong(this.props.songBeingPlayed)
     }

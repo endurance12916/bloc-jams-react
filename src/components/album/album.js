@@ -65,11 +65,27 @@ class Album extends Component {
         let sound = this.setSong(song);
 
         sound.isPaused() ?
-            (sound.play(), this.setState({
+            (this.setState({
+                songBeingPaused: this.state.currentSongObject.number
+            }), sound.play(), this.setState({
                 songBeingPlayed: this.state.currentSongNumber
             })) :
             (sound.pause(), this.setState({
                 songBeingPaused: this.state.currentSongNumber
+            }))
+    }
+
+    playerBarClick = (song, event) => {
+        let sound = this.setSong(this.state.currentSongObject)
+        
+        sound.isPaused() ?
+            (this.setState({
+                songBeingPaused: this.state.currentSongObject.number
+            }), sound.play(), this.setState({
+                songBeingPlayed: this.state.currentSongObject.number
+            })) :
+            (sound.pause(), this.setState({
+                songBeingPaused: this.state.currentSongObject.number
             }))
     }
 
@@ -92,16 +108,6 @@ class Album extends Component {
             this.setState({
                 currentSoundFile: sound
             })
-
-            this.state.currentSongNumber === this.state.songBeingPlayed ?
-                this.setState({
-                    songBeingPaused: this.state.currentSongNumber,
-                    songBeingPlayed: {}
-                }) :
-                this.setState({
-                    songBeingPlayed: this.state.currentSongNumber,
-                    songBeingPaused: {}
-                })
 
             console.log("playing different song")
             console.log(this.state.songBeingPlayed)
@@ -134,16 +140,6 @@ class Album extends Component {
                 currentSoundFile: sound
             })
 
-            this.state.currentSongNumber === this.state.songBeingPlayed ?
-                this.setState({
-                    songBeingPaused: this.state.currentSongNumber,
-                    songBeingPlayed: {}
-                }) :
-                this.setState({
-                    songBeingPlayed: this.state.currentSongNumber,
-                    songBeingPaused: {}
-                })
-
             this.setVolume(sound, this.state.currentVolume)
 
             return sound
@@ -164,6 +160,17 @@ class Album extends Component {
     previousSong() {
         this.setSong(exampleAlbum[this.state.currentSongNumber-1-1]);
         this.setState({songBeingPlayed:this.state.songBeingPlayed-1, songBeingPaused:{}});
+    }
+
+    playerBarPlayButtonContent() {
+        if ((Object.getOwnPropertyNames(this.state.currentSoundFile).length === 0)) {
+            // this.state.currentSoundFile!==undefined && !this.state.currentSoundFile.isPaused()){
+            return (<span className="ion-play"></span>)
+        } else if (this.state.currentSoundFile.isPaused()){
+            return (<span className="ion-play"></span>)
+        } else {
+            return (<span className="ion-pause"></span>)
+        }
     }
 
     render() {
@@ -187,7 +194,7 @@ class Album extends Component {
                     </table>
                 </main>
 
-                <PlayerBar
+                {/*<PlayerBar
                 currentSongObject={this.state.currentSongObject}
                 currentSongNumber={this.state.currentSongNumber}
                 songBeingPlayed={this.state.songBeingPlayed}
@@ -195,10 +202,46 @@ class Album extends Component {
                 
                 currentVolume={this.state.currentVolume}
                 setSong={this.setSong}
+                mouseClick={this.mouseClick}
                 nextSong={this.nextSong}
                 previousSong={this.previousSong}
                 setVolume={this.setVolume}
-                />
+                />*/}
+                <section className="player-bar">
+                    <div className="container">
+                        <div className="control-group main-controls">
+                            <a className="previous">
+                                <span className="ion-skip-backward"></span>
+                            </a>
+                            <a className="play-pause" onMouseUp={this.playerBarClick.bind(this)}>
+                                {this.playerBarPlayButtonContent()}
+                            </a>
+                            <a className="next">
+                                <span className="ion-skip-forward"></span>
+                            </a>
+                        </div>
+                        <div className="control-group currently-playing">
+                            <h2 className="song-name">{this.state.currentSongObject.title}</h2>
+                            <div className="seek-control">
+                                <div className="seek-bar">
+                                    <div className="fill"></div>
+                                    <div className="thumb"></div>
+                                </div>
+                                <div className="current-time">2:30</div>
+                                <div className="total-time">4:45</div>
+                            </div>
+                            <h2 className="artist-song-mobile"></h2>
+                            <h3 className="artist-name"></h3>
+                        </div>
+                        <div className="control-group volume">
+                            <span className="ion-volume-high icon"></span>
+                            <div className="seek-bar">
+                                <div className="fill"></div>
+                                <div className="thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </section>
         )
     }
