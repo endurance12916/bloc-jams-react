@@ -75,20 +75,6 @@ class Album extends Component {
             }))
     }
 
-    playerBarClick = (song, event) => {
-        let sound = this.setSong(this.state.currentSongObject)
-        
-        sound.isPaused() ?
-            (this.setState({
-                songBeingPaused: this.state.currentSongObject.number
-            }), sound.play(), this.setState({
-                songBeingPlayed: this.state.currentSongObject.number
-            })) :
-            (sound.pause(), this.setState({
-                songBeingPaused: this.state.currentSongObject.number
-            }))
-    }
-
     setSong(song) {
         // doesn't work on the first click, why? --> setState doesn't do it immediately. better to pass a return and define a variable in the other functino (let currentSoundFile = this.setSong(song);)
 
@@ -152,14 +138,19 @@ class Album extends Component {
         }
     }
 
-    nextSong() {
-        this.setSong(exampleAlbum[this.state.currentSongNumber-1+1]);
-        this.setState({songBeingPlayed:this.state.songBeingPlayed+1, songBeingPaused:{}});
-    }
-
-    previousSong() {
-        this.setSong(exampleAlbum[this.state.currentSongNumber-1-1]);
-        this.setState({songBeingPlayed:this.state.songBeingPlayed-1, songBeingPaused:{}});
+    // Below are player_bar functions. To move to player_bar.js when all of them function properly
+    playerBarClick = (song, event) => {
+        let sound = this.setSong(this.state.currentSongObject)
+        
+        sound.isPaused() ?
+            (this.setState({
+                songBeingPaused: this.state.currentSongObject.number
+            }), sound.play(), this.setState({
+                songBeingPlayed: this.state.currentSongObject.number
+            })) :
+            (sound.pause(), this.setState({
+                songBeingPaused: this.state.currentSongObject.number
+            }))
     }
 
     playerBarPlayButtonContent() {
@@ -171,6 +162,18 @@ class Album extends Component {
         } else {
             return (<span className="ion-pause"></span>)
         }
+    }
+
+    nextSong() {
+        let newSong = this.setSong(exampleAlbum[this.state.currentSongObject.number-1+1]);
+        this.setState({songBeingPlayed:this.state.songBeingPlayed+1, songBeingPaused:{}});
+        newSong.play();
+    }
+
+    previousSong() {
+        let newSong = this.setSong(exampleAlbum[this.state.currentSongObject.number-1-1]);
+        this.setState({songBeingPlayed:this.state.songBeingPlayed-1, songBeingPaused:{}});
+        newSong.play();
     }
 
     render() {
@@ -210,13 +213,13 @@ class Album extends Component {
                 <section className="player-bar">
                     <div className="container">
                         <div className="control-group main-controls">
-                            <a className="previous">
+                            <a className="previous" onMouseUp={this.previousSong.bind(this)}>
                                 <span className="ion-skip-backward"></span>
                             </a>
                             <a className="play-pause" onMouseUp={this.playerBarClick.bind(this)}>
                                 {this.playerBarPlayButtonContent()}
                             </a>
-                            <a className="next">
+                            <a className="next" onMouseUp={this.nextSong.bind(this)}>
                                 <span className="ion-skip-forward"></span>
                             </a>
                         </div>
