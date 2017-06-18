@@ -38,7 +38,11 @@ class Album extends Component {
 
     songNumberCellContent(song) {
         if (song.number === parseInt(this.state.songBeingPlayed,0)){
-            return (<a className="album-song-button"><span className="ion-pause"></span></a>)
+            if (!this.state.currentSoundFile.isPaused()){
+                return (<a className="album-song-button"><span className="ion-pause"></span></a>)
+            } else {
+                return (<a className="album-song-button"><span className="ion-play"></span></a>)
+            }
         }
         else if (song.number === parseInt(this.state.currentSongNumber,0)){
             return (<a className="album-song-button"><span className="ion-play"></span></a>)
@@ -52,56 +56,98 @@ class Album extends Component {
     };
 
     mouseLeave = (event) => {
-        this.setState({currentSongNumber:{}})
+        this.setState({
+            currentSongNumber: {}
+        })
     };
 
     mouseClick = (song, event) => {
-        // starting status: no song played, no song paused (songBeingPlayed: {}, songBeingPaused: {}):
-        // if click on a song -> play that song
+        let sound = this.setSong(song);
 
-        // if a song is currently being played (songBeingPlayed: {n}, songBeingPaused: {}):
-        // if click on the song being played, paused it; otherwise play the current song && stop the previous song and reverse the cell back to number
-
-        // if a song is currently being paused (songBeingPlayed: {}, songBeingPaused: {n})
-        // if click on the song being paused, resume it; otherwise play the current song && reverse the previous song's cell back to number
-
-        let currentSoundFile = this.setSong(song);
-
-        console.log(currentSoundFile)
-        console.log(this.state.songBeingPaused)
-        
-        // this.state.songBeingPaused==={}
-        //     ? currentSoundFile.play()
-        //     : currentSoundFile.pause()
-        
-        console.log(currentSoundFile.isPaused())
-
-        currentSoundFile.isPaused()
-            ? currentSoundFile.play()
-            : currentSoundFile.pause()
-
-        console.log(currentSoundFile.isPaused())
-        console.log(currentSoundFile.getDuration())
+        sound.isPaused() ?
+            (sound.play(), this.setState({
+                songBeingPlayed: this.state.currentSongNumber
+            })) :
+            (sound.pause(), this.setState({
+                songBeingPaused: this.state.currentSongNumber
+            }))
     }
 
     setSong(song) {
-        
         // doesn't work on the first click, why? --> setState doesn't do it immediately. better to pass a return and define a variable in the other functino (let currentSoundFile = this.setSong(song);)
-        this.setState({currentSongObject:song})
 
-        const sound = new buzz.sound(song.audioUrl, {
-            preload: true
-        })
-        
-        this.setState({currentSoundFile:sound})
+        // if previously playing a different song
+        if (!(Object.getOwnPropertyNames(this.state.currentSoundFile).length === 0) && this.state.currentSongObject !== song) {
+            // pause the previous song, then set new song
+            this.state.currentSoundFile.pause();
 
-        this.state.currentSongNumber === this.state.songBeingPlayed
-            ? this.setState({songBeingPaused: this.state.currentSongNumber, songBeingPlayed:{}})
-            : this.setState({songBeingPlayed: this.state.currentSongNumber, songBeingPaused: {}})
-        
-        this.setVolume(sound, this.state.currentVolume)
+            this.setState({
+                currentSongObject: song
+            })
 
-        return sound
+            const sound = new buzz.sound(song.audioUrl, {
+                preload: true
+            })
+
+            this.setState({
+                currentSoundFile: sound
+            })
+
+            this.state.currentSongNumber === this.state.songBeingPlayed ?
+                this.setState({
+                    songBeingPaused: this.state.currentSongNumber,
+                    songBeingPlayed: {}
+                }) :
+                this.setState({
+                    songBeingPlayed: this.state.currentSongNumber,
+                    songBeingPaused: {}
+                })
+
+            console.log("playing different song")
+            console.log(this.state.songBeingPlayed)
+            console.log(this.state.songBeingPaused)
+
+            this.setVolume(sound, this.state.currentVolume)
+
+            return sound
+        }
+        // if same song 
+        else if (this.state.currentSongObject === song) {
+            console.log("playing same song")
+            console.log(this.state.songBeingPlayed)
+            console.log(this.state.songBeingPaused)
+            return this.state.currentSoundFile
+        } else {
+            console.log("first time playing")
+            console.log(this.state.songBeingPlayed)
+            console.log(this.state.songBeingPaused)
+            // if first time playing
+            this.setState({
+                currentSongObject: song
+            })
+
+            const sound = new buzz.sound(song.audioUrl, {
+                preload: true
+            })
+
+            this.setState({
+                currentSoundFile: sound
+            })
+
+            this.state.currentSongNumber === this.state.songBeingPlayed ?
+                this.setState({
+                    songBeingPaused: this.state.currentSongNumber,
+                    songBeingPlayed: {}
+                }) :
+                this.setState({
+                    songBeingPlayed: this.state.currentSongNumber,
+                    songBeingPaused: {}
+                })
+
+            this.setVolume(sound, this.state.currentVolume)
+
+            return sound
+        }
     }
 
     setVolume(sound, volume) {
