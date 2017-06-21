@@ -62,17 +62,19 @@ class Album extends Component {
     };
 
     mouseClick = (song, event) => {
-        let sound = this.setSong(song);
+        this.audio = this.setSong(song);
 
-        sound.isPaused() ?
+        this.audio.isPaused() ?
             (this.setState({
                 songBeingPaused: this.state.currentSongObject.number
-            }), sound.play(), this.setState({
+            }), this.audio.play(), this.setState({
                 songBeingPlayed: this.state.currentSongNumber
             })) :
-            (sound.pause(), this.setState({
+            (this.audio.pause(), this.setState({
                 songBeingPaused: this.state.currentSongNumber
             }))
+
+        // this.updateSeekBar(sound);
     }
 
     setSong(song) {
@@ -87,21 +89,26 @@ class Album extends Component {
                 currentSongObject: song
             })
 
-            const sound = new buzz.sound(song.audioUrl, {
+            this.audio = new buzz.sound(song.audioUrl, {
                 preload: true
             })
 
             this.setState({
-                currentSoundFile: sound
+                currentSoundFile: this.audio
             })
 
             console.log("playing different song")
             console.log(this.state.songBeingPlayed)
             console.log(this.state.songBeingPaused)
 
-            this.setVolume(sound, this.state.currentVolume)
+            this.setVolume(this.audio, this.state.currentVolume)
 
-            return sound
+            console.log(this.audio.getTime());
+            console.log(this.audio.getDuration());
+            this.setCurrentTimeInPlayerBar(this.audio.getTime());
+            this.setTotalTimeInPlayerBar(this.audio.getDuration());
+
+            return this.audio
         }
         // if same song 
         else if (this.state.currentSongObject === song) {
@@ -118,17 +125,20 @@ class Album extends Component {
                 currentSongObject: song
             })
 
-            const sound = new buzz.sound(song.audioUrl, {
+            this.audio = new buzz.sound(song.audioUrl, {
                 preload: true
             })
 
             this.setState({
-                currentSoundFile: sound
+                currentSoundFile: this.audio
             })
 
-            this.setVolume(sound, this.state.currentVolume)
+            this.setVolume(this.audio, this.state.currentVolume)
 
-            return sound
+            this.setCurrentTimeInPlayerBar(this.audio.getTime());
+            this.setTotalTimeInPlayerBar(this.audio.getDuration());
+
+            return this.audio
         }
     }
 
@@ -140,17 +150,19 @@ class Album extends Component {
 
     // Below are player_bar functions. To move to player_bar.js when all of them function properly
     playerBarClick = (song, event) => {
-        let sound = this.setSong(this.state.currentSongObject)
+        this.audio = this.setSong(this.state.currentSongObject)
         
-        sound.isPaused() ?
+        this.audio.isPaused() ?
             (this.setState({
                 songBeingPaused: this.state.currentSongObject.number
-            }), sound.play(), this.setState({
+            }), this.audio.play(), this.setState({
                 songBeingPlayed: this.state.currentSongObject.number
             })) :
-            (sound.pause(), this.setState({
+            (this.audio.pause(), this.setState({
                 songBeingPaused: this.state.currentSongObject.number
             }))
+        
+        // this.updateSeekBar(sound);
     }
 
     playerBarPlayButtonContent() {
@@ -168,13 +180,95 @@ class Album extends Component {
         let newSong = this.setSong(exampleAlbum[this.state.currentSongObject.number-1+1]);
         this.setState({songBeingPlayed:this.state.songBeingPlayed+1, songBeingPaused:{}});
         newSong.play();
+
+        // this.updateSeekBar();
     }
 
     previousSong() {
         let newSong = this.setSong(exampleAlbum[this.state.currentSongObject.number-1-1]);
         this.setState({songBeingPlayed:this.state.songBeingPlayed-1, songBeingPaused:{}});
         newSong.play();
+
+        // this.updateSeekBar();
     }
+
+    // timeline bar
+    setCurrentTimeInPlayerBar(currentTime) {
+        return this.filterTimeCode(parseInt(currentTime));
+    }
+
+    setTotalTimeInPlayerBar(totalTime) {
+        return this.filterTimeCode(parseInt(totalTime));
+    }
+
+    filterTimeCode(timeInSeconds) {
+        let minutes = Math.floor(parseFloat(timeInSeconds) / 60);
+        let seconds = parseFloat(timeInSeconds) - minutes * 60;
+        return seconds < 10 ? (minutes + `:0` + seconds) : (minutes + ':' + seconds);
+    }
+
+    componentDidMount() {
+        // if use this.state.currentSoundFile, gives error:this.state.currentSoundFile.addEventListener is not a function
+        console.log(this.audio)
+        this.audio.addEventListener("timeupdate", () => {
+
+            console.log(this.audio.currentTime)
+            console.log(this.audio.duration)
+
+            let ratio = this.audio.currentTime / this.audio.duration;
+            let position = this.timeline.offsetWidth * ratio;
+            this.positionthumb(position);
+        });
+    };
+
+    mouseDown = (e) => {
+        console.log('mouse down')
+        window.addEventListener('mousemove', this.mouseMove);
+        window.addEventListener('mouseup', this.mouseUp);
+    };
+
+    mouseUp = (e) => {
+        console.log('mouse up')
+        window.removeEventListener('mousemove', this.mouseMove);
+        window.removeEventListener('mouseup', this.mouseUp);
+    };
+
+    mouseMove = (e) => {
+        console.log('mouse move')
+        // Width of the timeline
+        let timelineWidth = this.timeline.offsetWidth - this.thumb.offsetWidth;
+
+        // Left position of the thumb
+        let thumbLeft = e.pageX - this.timeline.offsetLeft;
+
+        if (thumbLeft >= 0 && thumbLeft <= timelineWidth) {
+            this.thumb.style.marginLeft = thumbLeft + "px";
+        }
+        if (thumbLeft < 0) {
+            this.thumb.style.marginLeft = "0px";
+        }
+        if (thumbLeft > timelineWidth) {
+            this.thumb.style.marginLeft = timelineWidth + "px";
+        }
+    }
+
+    positionthumb = (position) => {
+        let timelineWidth = this.timeline.offsetWidth - this.thumb.offsetWidth;
+        let thumbLeft = position - this.timeline.offsetLeft;
+        if (thumbLeft >= 0 && thumbLeft <= timelineWidth) {
+            this.thumb.style.marginLeft = thumbLeft + "px";
+        }
+        if (thumbLeft < 0) {
+            this.thumb.style.marginLeft = "0px";
+        }
+        if (thumbLeft > timelineWidth) {
+            this.thumb.style.marginLeft = timelineWidth + "px";
+        }
+        };
+
+        mouseMove = (e) => {
+        this.positionthumb(e.pageX);
+    };
 
     render() {
         return (
@@ -212,6 +306,9 @@ class Album extends Component {
                 />*/}
                 <section className="player-bar">
                     <div className="container">
+
+                        <audio ref="audio" src={this.state.currentSoundFile} ref={(audio) => { this.audio = audio } } />
+
                         <div className="control-group main-controls">
                             <a className="previous" onMouseUp={this.previousSong.bind(this)}>
                                 <span className="ion-skip-backward"></span>
@@ -227,11 +324,14 @@ class Album extends Component {
                             <h2 className="song-name">{this.state.currentSongObject.title}</h2>
                             <div className="seek-control">
                                 <div className="seek-bar">
-                                    <div className="fill"></div>
-                                    <div className="thumb"></div>
+                                    <div className="fill" onClick={this.mouseMove} ref={(timeline) => { this.timeline = timeline }} ></div>
+                                    <div className="thumb" onMouseDown={this.mouseDown} ref={(thumb) => { this.thumb = thumb }} >
+                                    </div>
                                 </div>
-                                <div className="current-time">2:30</div>
-                                <div className="total-time">4:45</div>
+                                {/*<div className="current-time">2:30</div>
+                                <div className="total-time">4:45</div>*/}
+                                <div className="current-time">{this.setCurrentTimeInPlayerBar()}</div>
+                                <div className="total-time">{this.setTotalTimeInPlayerBar()}</div>
                             </div>
                             <h2 className="artist-song-mobile"></h2>
                             <h3 className="artist-name"></h3>
