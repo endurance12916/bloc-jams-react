@@ -93,6 +93,19 @@ class Album extends Component {
                 preload: true
             })
 
+            // don't use arrow function here. because "this" will be in parent scope
+            this.audio.bind("timeupdate", function() {
+                    var timer = buzz.toTimer(this.getTime());
+                    console.log("buzz timer",timer)
+                    // console.log(this.audio.currentTime)
+                    // console.log(this.audio.duration)
+
+                    // let ratio = this.audio.currentTime / this.audio.duration;
+                    // let position = this.timeline.offsetWidth * ratio;
+                    // this.positionthumb(position);
+                });
+            
+
             this.setState({
                 currentSoundFile: this.audio
             })
@@ -207,19 +220,19 @@ class Album extends Component {
         return seconds < 10 ? (minutes + `:0` + seconds) : (minutes + ':' + seconds);
     }
 
-    componentDidMount() {
-        // if use this.state.currentSoundFile, gives error:this.state.currentSoundFile.addEventListener is not a function
-        console.log(this.audio)
-        this.audio.addEventListener("timeupdate", () => {
+    // componentDidMount() {
+    //     // if use this.state.currentSoundFile, gives error:this.state.currentSoundFile.addEventListener is not a function
+    //     console.log(this.audio)
+    //     this.audio.addEventListener("timeupdate", () => {
 
-            console.log(this.audio.currentTime)
-            console.log(this.audio.duration)
+    //         console.log(this.audio.currentTime)
+    //         console.log(this.audio.duration)
 
-            let ratio = this.audio.currentTime / this.audio.duration;
-            let position = this.timeline.offsetWidth * ratio;
-            this.positionthumb(position);
-        });
-    };
+    //         let ratio = this.audio.currentTime / this.audio.duration;
+    //         let position = this.timeline.offsetWidth * ratio;
+    //         this.positionthumb(position);
+    //     });
+    // };
 
     mouseDown = (e) => {
         console.log('mouse down')
