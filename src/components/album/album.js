@@ -78,16 +78,12 @@ class Album extends Component {
             (sound.pause(), this.setState({
                 songBeingPaused: this.state.currentSongNumber
             }))
-        
-
-        // this.updateSeekBar(sound);
     }
 
     setSong(song) {
         // doesn't work on the first click, why? --> setState doesn't do it immediately. better to pass a return and define a variable in the other functino (let currentSoundFile = this.setSong(song);)
 
         // if previously playing a different song
-        // if (!(Object.getOwnPropertyNames(this.state.currentSoundFile).length === 0) && this.state.currentSongObject !== song) {
         if (!_.isEmpty(this.state.currentSoundFile) && this.state.currentSongObject !== song) {
             // pause the previous song, then set new song
             this.state.currentSoundFile.pause();
@@ -104,21 +100,13 @@ class Album extends Component {
             let _this = this;
             sound.bind("timeupdate", function() {
                 let timer = buzz.toTimer(this.getTime());
-                // let width = this.refs.timeline.offsetWidth;
-                console.log("buzz timer",timer)
-                console.log(sound.getTime())
-                console.log(sound.getDuration())
-
                 let ratio = sound.getTime() / sound.getDuration();
-                console.log(ratio);
-                console.log(_this.timeline.offsetWidth);
                 let position = _this.timeline.offsetWidth * ratio;
                 _this.positionthumb(position);
 
                 // is this the best way? constantly changing states, would this eat a lot of cpu/memory?
                 _this.setState({currentTime:_this.setCurrentTimeInPlayerBar(sound.getTime())})
                 _this.setState({totalTime:_this.setTotalTimeInPlayerBar(sound.getDuration())})
-
             });
             
             this.setState({
@@ -126,28 +114,17 @@ class Album extends Component {
             })
 
             console.log("playing different song")
-            console.log(this.state.songBeingPlayed)
-            console.log(this.state.songBeingPaused)
 
             this.setVolume(sound, this.state.currentVolume)
 
-            // console.log(sound.getTime());
-            // console.log(sound.getDuration());
-
-
             return sound
-        }
-        // if same song 
-        else if (this.state.currentSongObject === song) {
-            console.log("playing same song")
-            console.log(this.state.songBeingPlayed)
-            console.log(this.state.songBeingPaused)
+        } else if (this.state.currentSongObject === song) {
+            // if same song 
+            console.log("playing/pausing same song")
             return this.state.currentSoundFile
         } else {
             // if first time playing
             console.log("first time playing")
-            console.log(this.state.songBeingPlayed)
-            console.log(this.state.songBeingPaused)
 
             this.setState({
                 currentSongObject: song
@@ -160,21 +137,13 @@ class Album extends Component {
             let _this = this;
             sound.bind("timeupdate", function() {
                 let timer = buzz.toTimer(this.getTime());
-                // let width = this.refs.timeline.offsetWidth;
-                console.log("buzz timer",timer)
-                console.log(sound.getTime())
-                console.log(sound.getDuration())
-
                 let ratio = sound.getTime() / sound.getDuration();
-                console.log(ratio);
-                console.log(_this.timeline.offsetWidth);
                 let position = _this.timeline.offsetWidth * ratio;
                 _this.positionthumb(position);
 
                 // is this the best way? constantly changing states, would this eat a lot of cpu/memory?
                 _this.setState({currentTime:_this.setCurrentTimeInPlayerBar(sound.getTime())})
                 _this.setState({totalTime:_this.setTotalTimeInPlayerBar(sound.getDuration())})
-
             });
 
             this.setState({
@@ -182,9 +151,6 @@ class Album extends Component {
             })
 
             this.setVolume(sound, this.state.currentVolume)
-
-            // this.setCurrentTimeInPlayerBar(sound.getTime());
-            // this.setTotalTimeInPlayerBar(sound.getDuration());
 
             return sound
         }
@@ -209,13 +175,10 @@ class Album extends Component {
             (sound.pause(), this.setState({
                 songBeingPaused: this.state.currentSongObject.number
             }))
-        
-        // this.updateSeekBar(sound);
     }
 
     playerBarPlayButtonContent() {
-        if ((Object.getOwnPropertyNames(this.state.currentSoundFile).length === 0)) {
-            // this.state.currentSoundFile!==undefined && !this.state.currentSoundFile.isPaused()){
+        if (_.isEmpty(this.state.currentSoundFile)) {
             return (<span className="ion-play"></span>)
         } else if (this.state.currentSoundFile.isPaused()){
             return (<span className="ion-play"></span>)
@@ -228,19 +191,15 @@ class Album extends Component {
         let newSong = this.setSong(exampleAlbum[this.state.currentSongObject.number-1+1]);
         this.setState({songBeingPlayed:this.state.songBeingPlayed+1, songBeingPaused:{}});
         newSong.play();
-
-        // this.updateSeekBar();
     }
 
     previousSong() {
         let newSong = this.setSong(exampleAlbum[this.state.currentSongObject.number-1-1]);
         this.setState({songBeingPlayed:this.state.songBeingPlayed-1, songBeingPaused:{}});
         newSong.play();
-
-        // this.updateSeekBar();
     }
 
-    // timeline bar
+    // timeline bar functions
     setCurrentTimeInPlayerBar(currentTime) {
         return this.filterTimeCode(parseInt(currentTime));
     }
@@ -340,7 +299,6 @@ class Album extends Component {
                 />*/}
                 <section className="player-bar">
                     <div className="container">
-                        {/*<audio ref="audio" src={this.state.currentSoundFile} ref={(audio) => { sound = audio } } />*/}
                         <div className="control-group main-controls">
                             <a className="previous" onMouseUp={this.previousSong.bind(this)}>
                                 <span className="ion-skip-backward"></span>
@@ -360,8 +318,6 @@ class Album extends Component {
                                     <div className="thumb" onMouseDown={this.mouseDown} ref={(thumb) => { this.thumb = thumb }} >
                                     </div>
                                 </div>
-                                {/*<div className="current-time">2:30</div>
-                                <div className="total-time">4:45</div>*/}
                                 <div className="current-time">{this.state.currentTime}</div>
                                 <div className="total-time">{this.state.totalTime}</div>
                             </div>

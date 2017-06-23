@@ -138,6 +138,10 @@
 .player-bar .volume {
     width: 25%;
     text-align: right;
+
+    .seek-bar .thumb{
+    left: 80%;
+    }
 }
 
 .player-bar .volume .icon {
