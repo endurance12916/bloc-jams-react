@@ -4,6 +4,7 @@ import cover from '../../assets/images/album_covers/01.png';
 import exampleAlbum from '../fixtures/fixtures.js';
 import buzz from 'buzz';
 import PlayerBar from './player_bar.js';
+import _ from 'lodash'; 
 
 class Album extends Component {
     constructor(){
@@ -15,21 +16,25 @@ class Album extends Component {
             songBeingPlayed: {},
             songBeingPaused: {},
             currentSoundFile:{},
-            currentVolume:80
+            currentVolume:80,
+            currentTime:"0:00",
+            totalTime:"0:00"
         }
-    this.populateSongs = this.populateSongs.bind(this)
+    // this.populateSongs = this.populateSongs.bind(this)
     this.setSong = this.setSong.bind(this)
     this.setVolume = this.setVolume.bind(this)
+    
     }
 
-    populateSongs() {
+    // use arrow function to auto-bind
+    populateSongs = () => {
         return(
             exampleAlbum.map((song,i)=>{
                 return(
                     <tr className="album-view-song-item" key={i} onMouseEnter={this.mouseEnter.bind(this,song)} onMouseLeave={this.mouseLeave}>
                         <td className="song-item-number" onMouseUp={this.mouseClick.bind(this,song)}>{this.songNumberCellContent(song)}</td>
                         <td className="song-item-title">{song.title}</td>
-                        <td className="song-item-duration">{song.duration}</td>
+                        <td className="song-item-duration">{this.filterTimeCode(parseInt(song.duration))}</td>
                     </tr>
                 )
             })
@@ -62,17 +67,18 @@ class Album extends Component {
     };
 
     mouseClick = (song, event) => {
-        this.audio = this.setSong(song);
+        let sound = this.setSong(song);
 
-        this.audio.isPaused() ?
+        sound.isPaused() ?
             (this.setState({
                 songBeingPaused: this.state.currentSongObject.number
-            }), this.audio.play(), this.setState({
+            }), sound.play(), this.setState({
                 songBeingPlayed: this.state.currentSongNumber
             })) :
-            (this.audio.pause(), this.setState({
+            (sound.pause(), this.setState({
                 songBeingPaused: this.state.currentSongNumber
             }))
+        
 
         // this.updateSeekBar(sound);
     }
@@ -81,7 +87,8 @@ class Album extends Component {
         // doesn't work on the first click, why? --> setState doesn't do it immediately. better to pass a return and define a variable in the other functino (let currentSoundFile = this.setSong(song);)
 
         // if previously playing a different song
-        if (!(Object.getOwnPropertyNames(this.state.currentSoundFile).length === 0) && this.state.currentSongObject !== song) {
+        // if (!(Object.getOwnPropertyNames(this.state.currentSoundFile).length === 0) && this.state.currentSongObject !== song) {
+        if (!_.isEmpty(this.state.currentSoundFile) && this.state.currentSongObject !== song) {
             // pause the previous song, then set new song
             this.state.currentSoundFile.pause();
 
@@ -89,39 +96,46 @@ class Album extends Component {
                 currentSongObject: song
             })
 
-            this.audio = new buzz.sound(song.audioUrl, {
+            const sound = new buzz.sound(song.audioUrl, {
                 preload: true
             })
 
             // don't use arrow function here. because "this" will be in parent scope
-            this.audio.bind("timeupdate", function() {
-                    var timer = buzz.toTimer(this.getTime());
-                    console.log("buzz timer",timer)
-                    // console.log(this.audio.currentTime)
-                    // console.log(this.audio.duration)
+            let _this = this;
+            sound.bind("timeupdate", function() {
+                let timer = buzz.toTimer(this.getTime());
+                // let width = this.refs.timeline.offsetWidth;
+                console.log("buzz timer",timer)
+                console.log(sound.getTime())
+                console.log(sound.getDuration())
 
-                    // let ratio = this.audio.currentTime / this.audio.duration;
-                    // let position = this.timeline.offsetWidth * ratio;
-                    // this.positionthumb(position);
-                });
+                let ratio = sound.getTime() / sound.getDuration();
+                console.log(ratio);
+                console.log(_this.timeline.offsetWidth);
+                let position = _this.timeline.offsetWidth * ratio;
+                _this.positionthumb(position);
+
+                // is this the best way? constantly changing states, would this eat a lot of cpu/memory?
+                _this.setState({currentTime:_this.setCurrentTimeInPlayerBar(sound.getTime())})
+                _this.setState({totalTime:_this.setTotalTimeInPlayerBar(sound.getDuration())})
+
+            });
             
-
             this.setState({
-                currentSoundFile: this.audio
+                currentSoundFile: sound
             })
 
             console.log("playing different song")
             console.log(this.state.songBeingPlayed)
             console.log(this.state.songBeingPaused)
 
-            this.setVolume(this.audio, this.state.currentVolume)
+            this.setVolume(sound, this.state.currentVolume)
 
-            console.log(this.audio.getTime());
-            console.log(this.audio.getDuration());
-            this.setCurrentTimeInPlayerBar(this.audio.getTime());
-            this.setTotalTimeInPlayerBar(this.audio.getDuration());
+            // console.log(sound.getTime());
+            // console.log(sound.getDuration());
 
-            return this.audio
+
+            return sound
         }
         // if same song 
         else if (this.state.currentSongObject === song) {
@@ -130,28 +144,49 @@ class Album extends Component {
             console.log(this.state.songBeingPaused)
             return this.state.currentSoundFile
         } else {
+            // if first time playing
             console.log("first time playing")
             console.log(this.state.songBeingPlayed)
             console.log(this.state.songBeingPaused)
-            // if first time playing
+
             this.setState({
                 currentSongObject: song
             })
 
-            this.audio = new buzz.sound(song.audioUrl, {
+            const sound = new buzz.sound(song.audioUrl, {
                 preload: true
             })
 
+            let _this = this;
+            sound.bind("timeupdate", function() {
+                let timer = buzz.toTimer(this.getTime());
+                // let width = this.refs.timeline.offsetWidth;
+                console.log("buzz timer",timer)
+                console.log(sound.getTime())
+                console.log(sound.getDuration())
+
+                let ratio = sound.getTime() / sound.getDuration();
+                console.log(ratio);
+                console.log(_this.timeline.offsetWidth);
+                let position = _this.timeline.offsetWidth * ratio;
+                _this.positionthumb(position);
+
+                // is this the best way? constantly changing states, would this eat a lot of cpu/memory?
+                _this.setState({currentTime:_this.setCurrentTimeInPlayerBar(sound.getTime())})
+                _this.setState({totalTime:_this.setTotalTimeInPlayerBar(sound.getDuration())})
+
+            });
+
             this.setState({
-                currentSoundFile: this.audio
+                currentSoundFile: sound
             })
 
-            this.setVolume(this.audio, this.state.currentVolume)
+            this.setVolume(sound, this.state.currentVolume)
 
-            this.setCurrentTimeInPlayerBar(this.audio.getTime());
-            this.setTotalTimeInPlayerBar(this.audio.getDuration());
+            // this.setCurrentTimeInPlayerBar(sound.getTime());
+            // this.setTotalTimeInPlayerBar(sound.getDuration());
 
-            return this.audio
+            return sound
         }
     }
 
@@ -163,15 +198,15 @@ class Album extends Component {
 
     // Below are player_bar functions. To move to player_bar.js when all of them function properly
     playerBarClick = (song, event) => {
-        this.audio = this.setSong(this.state.currentSongObject)
+        let sound = this.setSong(this.state.currentSongObject)
         
-        this.audio.isPaused() ?
+        sound.isPaused() ?
             (this.setState({
                 songBeingPaused: this.state.currentSongObject.number
-            }), this.audio.play(), this.setState({
+            }), sound.play(), this.setState({
                 songBeingPlayed: this.state.currentSongObject.number
             })) :
-            (this.audio.pause(), this.setState({
+            (sound.pause(), this.setState({
                 songBeingPaused: this.state.currentSongObject.number
             }))
         
@@ -219,20 +254,6 @@ class Album extends Component {
         let seconds = parseFloat(timeInSeconds) - minutes * 60;
         return seconds < 10 ? (minutes + `:0` + seconds) : (minutes + ':' + seconds);
     }
-
-    // componentDidMount() {
-    //     // if use this.state.currentSoundFile, gives error:this.state.currentSoundFile.addEventListener is not a function
-    //     console.log(this.audio)
-    //     this.audio.addEventListener("timeupdate", () => {
-
-    //         console.log(this.audio.currentTime)
-    //         console.log(this.audio.duration)
-
-    //         let ratio = this.audio.currentTime / this.audio.duration;
-    //         let position = this.timeline.offsetWidth * ratio;
-    //         this.positionthumb(position);
-    //     });
-    // };
 
     mouseDown = (e) => {
         console.log('mouse down')
@@ -319,9 +340,7 @@ class Album extends Component {
                 />*/}
                 <section className="player-bar">
                     <div className="container">
-
-                        <audio ref="audio" src={this.state.currentSoundFile} ref={(audio) => { this.audio = audio } } />
-
+                        {/*<audio ref="audio" src={this.state.currentSoundFile} ref={(audio) => { sound = audio } } />*/}
                         <div className="control-group main-controls">
                             <a className="previous" onMouseUp={this.previousSong.bind(this)}>
                                 <span className="ion-skip-backward"></span>
@@ -343,8 +362,8 @@ class Album extends Component {
                                 </div>
                                 {/*<div className="current-time">2:30</div>
                                 <div className="total-time">4:45</div>*/}
-                                <div className="current-time">{this.setCurrentTimeInPlayerBar()}</div>
-                                <div className="total-time">{this.setTotalTimeInPlayerBar()}</div>
+                                <div className="current-time">{this.state.currentTime}</div>
+                                <div className="total-time">{this.state.totalTime}</div>
                             </div>
                             <h2 className="artist-song-mobile"></h2>
                             <h3 className="artist-name"></h3>
