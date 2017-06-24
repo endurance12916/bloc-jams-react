@@ -20,10 +20,6 @@ class Album extends Component {
             currentTime:"0:00",
             totalTime:"0:00"
         }
-    // this.populateSongs = this.populateSongs.bind(this)
-    this.setSong = this.setSong.bind(this)
-    this.setVolume = this.setVolume.bind(this)
-    
     }
 
     // use arrow function to auto-bind
@@ -80,7 +76,7 @@ class Album extends Component {
             }))
     }
 
-    setSong(song) {
+    setSong = (song) => {
         // doesn't work on the first click, why? --> setState doesn't do it immediately. better to pass a return and define a variable in the other functino (let currentSoundFile = this.setSong(song);)
 
         // if previously playing a different song
@@ -96,7 +92,6 @@ class Album extends Component {
                 preload: true
             })
 
-            // don't use arrow function here. because "this" will be in parent scope
             let _this = this;
             sound.bind("timeupdate", function() {
                 let timer = buzz.toTimer(this.getTime());
@@ -109,28 +104,18 @@ class Album extends Component {
                 _this.setState({totalTime:_this.setTotalTimeInPlayerBar(sound.getDuration())})
             });
             
-            this.setState({
-                currentSoundFile: sound
-            })
-
-            console.log("playing different song")
-
+            this.setState({currentSoundFile: sound})
             this.setVolume(sound, this.state.currentVolume)
 
             return sound
 
         } else if (this.state.currentSongObject === song) {
             // if same song 
-            console.log("playing/pausing same song")
             return this.state.currentSoundFile
 
         } else {
             // if first time playing
-            console.log("first time playing")
-
-            this.setState({
-                currentSongObject: song
-            })
+            this.setState({currentSongObject: song})
 
             const sound = new buzz.sound(song.audioUrl, {
                 preload: true
@@ -148,17 +133,14 @@ class Album extends Component {
                 _this.setState({totalTime:_this.setTotalTimeInPlayerBar(sound.getDuration())})
             });
 
-            this.setState({
-                currentSoundFile: sound
-            })
-
+            this.setState({currentSoundFile: sound})
             this.setVolume(sound, this.state.currentVolume)
 
             return sound
         }
     }
 
-    setVolume(sound, volume) {
+    setVolume = (sound, volume) => {
         if (sound) {
             sound.setVolume(volume);
         }
@@ -219,19 +201,16 @@ class Album extends Component {
 
     // mouse functions for the timeline
     mouseDown = (e) => {
-        console.log('mouse down')
         window.addEventListener('mousemove', this.mouseMove);
         window.addEventListener('mouseup', this.mouseUp);
     };
 
     mouseUp = (e) => {
-        console.log('mouse up')
         window.removeEventListener('mousemove', this.mouseMove);
         window.removeEventListener('mouseup', this.mouseUp);
     };
 
     mouseMove = (e) => {
-        console.log('mouse move')
         this.positionThumb(e.pageX-this.container.offsetLeft);
         let sound = this.state.currentSoundFile;
         sound.setTime(((e.pageX-this.container.offsetLeft) / this.timeline.offsetWidth) * sound.getDuration())
@@ -241,73 +220,54 @@ class Album extends Component {
         let timelineWidth = this.timeline.offsetWidth - this.thumb.offsetWidth;
         let thumbLeft = position - this.timeline.offsetLeft;
         if (thumbLeft >= 0 && thumbLeft <= timelineWidth) {
-            this.thumb.style.marginLeft = thumbLeft + "px";
+            this.thumb.style.left = thumbLeft + "px";
+            this.fill.style.width = this.thumb.style.left;
         }
         if (thumbLeft < 0) {
-            this.thumb.style.marginLeft = "0px";
+            this.thumb.style.left = "0px";
+            this.fill.style.width = this.thumb.style.left;
         }
         if (thumbLeft > timelineWidth) {
-            this.thumb.style.marginLeft = timelineWidth + "px";
+            this.thumb.style.left = timelineWidth + "px";
+            this.fill.style.width = this.thumb.style.left;
         }
     };
 
     // mouse functions for the volume
     mouseDownVol = (e) => {
-        console.log('mouse down volume')
         window.addEventListener('mousemove', this.mouseMoveVol);
         window.addEventListener('mouseup', this.mouseUpVol);
     };
 
     mouseUpVol = (e) => {
-        console.log('mouse up volume')
         window.removeEventListener('mousemove', this.mouseMoveVol);
         window.removeEventListener('mouseup', this.mouseUpVol);
     };
 
     mouseMoveVol = (e) => {
-        console.log('mouse move volume')
         this.positionThumbVol(e.pageX);
         let sound = this.state.currentSoundFile;
-        // // sound.setVolume(((e.pageX-this.containerVol.offsetLeft) / this.volBar.offsetWidth) * 100)
-        // let vol = (e.pageX / this.volBar.offsetWidth);
-        // sound.setVolume(vol)
-        // console.log('volume', vol)
-
-        console.log("e.pageX - this.containerVol.offsetLeft", e.pageX - this.containerVol.offsetLeft)
-        console.log("this.containerVol.offsetWidth", this.containerVol.offsetWidth)
-        let fillRatio = (e.pageX - this.containerVol.offsetWidth)/this.volBar.offsetWidth;
-        let vol = fillRatio * 100
+        let offsetX = e.pageX - this.volBar.offsetLeft;
+        let vol = offsetX/this.volBar.offsetWidth * 100;
+        if (vol>100) {vol = 100} else if (vol<0) {vol = 0}
         this.setVolume(sound, vol)
         this.setState({currentVolume:vol})
-        console.log("volume", vol)
     };
 
     positionThumbVol = (position) => {
-        // let timelineWidth = this.timeline.offsetWidth - this.thumb.offsetWidth;
-        // let thumbLeft = position - this.timeline.offsetLeft;
-        // if (thumbLeft >= 0 && thumbLeft <= timelineWidth) {
-        //     this.thumb.style.marginLeft = thumbLeft + "px";
-        // }
-        // if (thumbLeft < 0) {
-        //     this.thumb.style.marginLeft = "0px";
-        // }
-        // if (thumbLeft > timelineWidth) {
-        //     this.thumb.style.marginLeft = timelineWidth + "px";
-        // }
-
-        let volBarWidth = this.volBar.offsetWidth - this.thumbVol.offsetWidth;
         let thumbVolLeft = position - this.volBar.offsetLeft;
+        let volBarWidth = this.volBar.offsetWidth;
         if (thumbVolLeft >= 0 && thumbVolLeft <= volBarWidth) {
-            this.thumbVol.style.marginLeft = thumbVolLeft + "px";
-            console.log("this.thumbVol.style.marginLeft", this.thumbVol.style.marginLeft)
+            this.thumbVol.style.left = thumbVolLeft + "px";
+            this.fillVol.style.width = this.thumbVol.style.left;
         }
         if (thumbVolLeft < 0) {
-            this.thumbVol.style.marginLeft = "0px";
-            console.log("this.thumbVol.style.marginLeft", this.thumbVol.style.marginLeft)
+            this.thumbVol.style.left = + "0px";
+            this.fillVol.style.width = this.thumbVol.style.left;
         }
         if (thumbVolLeft > volBarWidth) {
-            this.thumbVol.style.marginLeft = volBarWidth + "px";
-            console.log("this.thumbVol.style.marginLeft", this.thumbVol.style.marginLeft)
+            this.thumbVol.style.left = volBarWidth + "px";
+            this.fillVol.style.width = this.thumbVol.style.left;
         }
     };
 
@@ -362,7 +322,7 @@ class Album extends Component {
                             <h2 className="song-name">{this.state.currentSongObject.title}</h2>
                             <div className="seek-control">
                                 <div className="seek-bar" onClick={this.mouseMove} ref={(timeline) => { this.timeline = timeline }} >
-                                    <div className="fill"></div>
+                                    <div className="fill" ref={(fill) => { this.fill = fill }}></div>
                                     <div className="thumb" onMouseDown={this.mouseDown} ref={(thumb) => { this.thumb = thumb }} ></div>
                                 </div>
                                 <div className="current-time">{this.state.currentTime}</div>
@@ -374,7 +334,7 @@ class Album extends Component {
                         <div className="control-group volume" ref={(containerVol) => { this.containerVol = containerVol }}>
                             <span className="ion-volume-high icon"></span>
                             <div className="seek-bar" onClick={this.mouseMoveVol} ref={(volBar) => { this.volBar = volBar }}>
-                                <div className="fill"></div>
+                                <div className="fill" ref={(fillVol) => { this.fillVol = fillVol }} ></div>
                                 <div className="thumbVol" onMouseDown={this.mouseDownVol} ref={(thumbVol) => { this.thumbVol = thumbVol }} ></div>
                             </div>
                         </div>

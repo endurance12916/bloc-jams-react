@@ -102,8 +102,8 @@
 }
 
 .seek-bar .fill {
-    // background-color: white;
-    // width: 36%;
+    background-color: white;
+    width: 0%;
     height: 0.25rem;
     border-radius: 2px;
 }
@@ -113,9 +113,7 @@
     height: 0.5rem;
     width: 0.5rem;
     background-color: white;
-    // left: 36%;
     top: 50%;
-    /* #1 */
     margin-left: -0.25rem;
     margin-top: -0.25rem;
     border-radius: 50%;
@@ -140,9 +138,7 @@
     height: 0.5rem;
     width: 0.5rem;
     background-color: white;
-    // left: 36%;
     top: 50%;
-    /* #1 */
     margin-left: -0.25rem;
     margin-top: -0.25rem;
     border-radius: 50%;
@@ -167,7 +163,14 @@
     text-align: right;
 
     .seek-bar .thumbVol{
-    left: 80%;
+        left: 80%;
+    }
+
+    .seek-bar .fill {
+        background-color: white;
+        width: 80%;
+        height: 0.25rem;
+        border-radius: 2px;
     }
 }
 
