@@ -136,13 +136,21 @@ class Album extends Component {
 
     // the two functions below will return error if not bind
     nextSong = (newSong) => {
-        this.setState({songBeingPlayed:this.state.songBeingPlayed+1, songBeingPaused:{}});
+        let nextSongBeingPlayedIndex = this.state.songBeingPlayed+1;
+        nextSongBeingPlayedIndex > 5
+            ? nextSongBeingPlayedIndex = nextSongBeingPlayedIndex - 5
+            : nextSongBeingPlayedIndex       
+        this.setState({songBeingPlayed:nextSongBeingPlayedIndex, songBeingPaused:{}});
         let sound = this.setSong(newSong);
         sound.play();
     }
 
     previousSong = (newSong) => {
-        this.setState({songBeingPlayed:this.state.songBeingPlayed-1, songBeingPaused:{}});
+        let previousSongBeingPlayedIndex = this.state.songBeingPlayed-1;
+        previousSongBeingPlayedIndex < 1
+            ? previousSongBeingPlayedIndex = previousSongBeingPlayedIndex + 5
+            : previousSongBeingPlayedIndex    
+        this.setState({songBeingPlayed:previousSongBeingPlayedIndex, songBeingPaused:{}});
         let sound = this.setSong(newSong);
         sound.play();
     }

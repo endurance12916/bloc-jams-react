@@ -43,12 +43,20 @@ class PlayerBar extends Component {
     }
 
     nextSong() {
-        let newSong = exampleAlbum[this.props.currentSongObject.number-1+1];
+        let nextSongIndex = this.props.currentSongObject.number-1+1;
+        nextSongIndex > 4
+            ? nextSongIndex = nextSongIndex - 5
+            : nextSongIndex
+        let newSong = exampleAlbum[nextSongIndex];
         this.props.nextSong(newSong);
     }
 
     previousSong() {
-        let newSong = exampleAlbum[this.props.currentSongObject.number-1-1];
+        let previousSongIndex = this.props.currentSongObject.number-1-1;
+        previousSongIndex < 0
+            ? previousSongIndex = previousSongIndex + 5
+            : previousSongIndex
+        let newSong = exampleAlbum[previousSongIndex];
         this.props.previousSong(newSong);
     }
 
