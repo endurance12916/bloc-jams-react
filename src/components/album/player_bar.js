@@ -15,17 +15,20 @@ class PlayerBar extends Component {
     }
 
     timeUpdate = (sound) => {
-        let _this = this;
-        sound.bind("timeupdate", function() {
-            let timer = buzz.toTimer(this.getTime());
-            let ratio = sound.getTime() / sound.getDuration();
-            let position = _this.timeline.offsetWidth * ratio;
-            _this.positionThumb(position);
+        if (sound!==null) {
+            // is _this=this the best way to make sure the scope is correct for callback functions?
+            let _this = this;
+            sound.bind("timeupdate", function() {
+                let timer = buzz.toTimer(this.getTime());
+                let ratio = sound.getTime() / sound.getDuration();
+                let position = _this.timeline.offsetWidth * ratio;
+                _this.positionThumb(position);
 
-            // is this the best way? constantly changing states, would this eat a lot of cpu/memory?
-            _this.setState({currentTime:_this.setCurrentTimeInPlayerBar(sound.getTime())})
-            _this.setState({totalTime:_this.setTotalTimeInPlayerBar(sound.getDuration())})
-        });
+                // is this the best way? constantly changing states, would this eat a lot of cpu/memory?
+                _this.setState({currentTime:_this.setCurrentTimeInPlayerBar(sound.getTime())})
+                _this.setState({totalTime:_this.setTotalTimeInPlayerBar(sound.getDuration())})
+            });
+        }
     }
 
     playerBarClick = (event) => {
@@ -141,6 +144,10 @@ class PlayerBar extends Component {
         }
     };
     
+    componentWillUnmount() {
+        window.removeEventListener('timeUpdate', this.timeUpdate);
+    }
+
     render() {
         return (
             <section className="player-bar">

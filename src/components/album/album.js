@@ -11,12 +11,12 @@ class Album extends Component {
         super();
 
         this.state = {
-            currentSongObject:{},
+            currentSongObject: {},
             currentSongNumber: {},
             songBeingPlayed: {},
             songBeingPaused: {},
-            currentSoundFile:{},
-            currentVolume:80,
+            currentSoundFile: {},
+            currentVolume: 80,
         }
     }
 
@@ -77,6 +77,7 @@ class Album extends Component {
         }
     }
 
+    // function below is for the play button in the playerbar section, for the purpose of changing states in parent
     clickButtonChangeState = (song) => {
         let sound = this.setSong(song);
         if (!_.isEmpty(sound)) {
@@ -118,10 +119,8 @@ class Album extends Component {
             const sound = new buzz.sound(song.audioUrl, {
                 preload: true
             })
-
             // is this the best way?
             this.child.timeUpdate(sound)
-
             this.setState({currentSoundFile: sound, currentSongObject: song})
             this.setVolume(sound, this.state.currentVolume)
             return sound
@@ -159,6 +158,11 @@ class Album extends Component {
         let minutes = Math.floor(parseFloat(timeInSeconds) / 60);
         let seconds = parseFloat(timeInSeconds) - minutes * 60;
         return seconds < 10 ? (minutes + `:0` + seconds) : (minutes + ':' + seconds);
+    }
+
+    componentWillUnmount() {
+        this.state.currentSoundFile.stop();
+        window.removeEventListener('timeUpdate', this.child.timeUpdate);
     }
 
     render() {
