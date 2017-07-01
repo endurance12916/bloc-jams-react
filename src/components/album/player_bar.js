@@ -145,7 +145,7 @@ class PlayerBar extends Component {
     };
     
     componentWillUnmount() {
-        window.removeEventListener('timeUpdate', this.timeUpdate);
+        this.props.currentSoundFile.unbind('timeupdate', this.timeUpdate);
     }
 
     render() {

@@ -162,7 +162,6 @@ class Album extends Component {
 
     componentWillUnmount() {
         this.state.currentSoundFile.stop();
-        window.removeEventListener('timeUpdate', this.child.timeUpdate);
     }
 
     render() {
