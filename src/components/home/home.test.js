@@ -13,20 +13,7 @@ it('renders a snapshot', () => {
     expect(wrapper).toMatchSnapshot();
 });
 
-// Why does this one return error, even though the first test (renders without crashing) passes?
-// FAIL  src/components/home/home.test.js
-//   ● renders default text
-
-//     expect(received).toEqual(expected)
-
-//     Expected value to equal:
-//       true
-//     Received:
-//       false
-
-//       at Object.<anonymous>.it (src/components/home/home.test.js:20:42)
-//       at process._tickCallback (internal/process/next_tick.js:109:7)
-
+//Wrong:
 // it('renders default text', () => {
 //   const wrapper = mount(<Home />)
 //   const expectedNode = shallow(<DefaultText />)
@@ -38,30 +25,20 @@ it('renders default text', () => {
   expect((home).contains(<DefaultText />)).toEqual(true);
 });
 
-// This test doesn't work...How to test a scrolling event?
-//  ● renders additional texts after scrolling
-
-//     expect(received).toEqual(expected)
-
-//     Expected value to equal:
-//       true
-//     Received:
-//       false
-
-//       at Object.<anonymous>.it (src/components/home/home.test.js:26:75)
-//       at process._tickCallback (internal/process/next_tick.js:109:7)
+//Wrong:
 // it('renders additional texts after scrolling', () => {
 //   const scrolling = mount(<Home />).simulate('scroll');
 //   expect(scrolling.contains(ScrollText)).toEqual(true);
 // })
 
+//Works but not desired
 // it('renders additional texts after scrolling', () => {
 //   const scrolling = shallow(<Home />).simulate('scroll');
 //   expect(scrolling.contains(<ScrollText/>)).toEqual(true);
 // })
 
 it('renders additional texts after scrolling', () => {
-  const scrollText = shallow(<ScrollText />);
+  const scrollText = mount(<ScrollText />);
   const instance = scrollText.instance();
   instance.animatePoints = jest.fn();
   instance.scrollDown();
