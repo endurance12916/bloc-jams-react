@@ -104,7 +104,7 @@ class Album extends Component {
                 preload: true
             })
             // is this the best way?
-            this.child.timeUpdate(sound)
+            // this.child.timeUpdate(sound)
             this.setState({currentSoundFile: sound, currentSongObject: song})
             this.setVolume(sound, this.state.currentVolume)
             return sound
@@ -120,7 +120,7 @@ class Album extends Component {
                 preload: true
             })
             // is this the best way?
-            this.child.timeUpdate(sound)
+            // this.child.timeUpdate(sound)
             this.setState({currentSoundFile: sound, currentSongObject: song})
             this.setVolume(sound, this.state.currentVolume)
             return sound

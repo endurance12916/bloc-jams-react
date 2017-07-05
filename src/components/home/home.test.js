@@ -27,12 +27,16 @@ it('renders a snapshot', () => {
 //       at Object.<anonymous>.it (src/components/home/home.test.js:20:42)
 //       at process._tickCallback (internal/process/next_tick.js:109:7)
 
-it('renders default text', () => {
-  const wrapper = mount(<Home />)
-  const expectedNode = shallow(<DefaultText />)
-  expect((wrapper).contains(expectedNode)).toEqual(true);
-})
+// it('renders default text', () => {
+//   const wrapper = mount(<Home />)
+//   const expectedNode = shallow(<DefaultText />)
+//   expect((wrapper).contains(expectedNode)).toEqual(true);
+// })
 
+it('renders default text', () => {
+  const home = shallow(<Home/>);
+  expect((home).contains(<DefaultText />)).toEqual(true);
+});
 
 // This test doesn't work...How to test a scrolling event?
 //  ● renders additional texts after scrolling
@@ -46,7 +50,20 @@ it('renders default text', () => {
 
 //       at Object.<anonymous>.it (src/components/home/home.test.js:26:75)
 //       at process._tickCallback (internal/process/next_tick.js:109:7)
+// it('renders additional texts after scrolling', () => {
+//   const scrolling = mount(<Home />).simulate('scroll');
+//   expect(scrolling.contains(ScrollText)).toEqual(true);
+// })
+
+// it('renders additional texts after scrolling', () => {
+//   const scrolling = shallow(<Home />).simulate('scroll');
+//   expect(scrolling.contains(<ScrollText/>)).toEqual(true);
+// })
+
 it('renders additional texts after scrolling', () => {
-  const scrolling = mount(<Home />).simulate('scroll');
-  expect(scrolling.contains(ScrollText)).toEqual(true);
+  const scrollText = shallow(<ScrollText />);
+  const instance = scrollText.instance();
+  instance.animatePoints = jest.fn();
+  instance.scrollDown();
+  expect(instance.animatePoints).toHaveBeenCalled();
 })

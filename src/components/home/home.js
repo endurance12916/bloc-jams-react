@@ -7,27 +7,7 @@ const DefaultText = () => (
     </section>
 )
 
-const ScrollText = () => (
-    <section className="selling-points container clearfix">
-        <div className="point column third">
-            <span className="ion-music-note"></span>
-            <h5 className="point-title">Choose your music</h5>
-            <p className="point-description">The world is full of music; why should you have to listen to music that someone else chose?</p>
-        </div>
-        <div className="point column third">
-            <span className="ion-radio-waves"></span>
-            <h5 className="point-title">Unlimited, streaming, ad-free</h5>
-            <p className="point-description">No arbitrary limits. No distractions.</p>
-        </div>
-        <div className="point column third">
-            <span className="ion-iphone"></span>
-            <h5 className="point-title">Mobile enabled</h5>
-            <p className="point-description">Listen to your music on the go. This streaming service is available on all mobile platforms.</p>
-        </div>
-    </section>
-)
-
-class Home extends Component {
+class ScrollText extends Component {
 
     animatePoints(points) {
         for (let point of points) {
@@ -39,9 +19,9 @@ class Home extends Component {
     };
 
     scrollDown = (event) => {
-        const pointsArray = document.getElementsByClassName('point');
-        const sellingPoints = document.getElementsByClassName('selling-points')[0];
-        const scrollDistance = sellingPoints.getBoundingClientRect().top - window.innerHeight + 200;
+        // const pointsArray = document.getElementsByClassName('point');
+        const pointsArray = [this.pointOne, this.pointTwo, this.pointThree]
+        const scrollDistance = this.sellingPoints.getBoundingClientRect().top - window.innerHeight + 200;
         // Automatically animate the points on a tall screen where scrolling can't trigger the animation
         if (window.innerHeight > 950) {
             this.animatePoints(pointsArray);
@@ -60,16 +40,37 @@ class Home extends Component {
         window.removeEventListener("scroll", this.scrollDown)
     }
 
-    render() {
+    render(){
         return (
+        <section className="selling-points container clearfix" ref={(sellingPoints) => { this.sellingPoints = sellingPoints }} >
+            <div className="point column third" ref={(pointOne) => { this.pointOne = pointOne }}>
+                <span className="ion-music-note"></span>
+                <h5 className="point-title">Choose your music</h5>
+                <p className="point-description">The world is full of music; why should you have to listen to music that someone else chose?</p>
+            </div>
+            <div className="point column third" ref={(pointTwo) => { this.pointTwo = pointTwo }}>
+                <span className="ion-radio-waves"></span>
+                <h5 className="point-title">Unlimited, streaming, ad-free</h5>
+                <p className="point-description">No arbitrary limits. No distractions.</p>
+            </div>
+            <div className="point column third" ref={(pointThree) => { this.pointThree = pointThree }}>
+                <span className="ion-iphone"></span>
+                <h5 className="point-title">Mobile enabled</h5>
+                <p className="point-description">Listen to your music on the go. This streaming service is available on all mobile platforms.</p>
+            </div>
+        </section>
+        )
+    }
+}
+
+const Home = () => {
+    return (
         <section className="landing">
             <DefaultText />
             <ScrollText />
         </section>
-        );
-    }
+    );
 }
-
 
 
 // export default Home;

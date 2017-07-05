@@ -143,6 +143,12 @@ class PlayerBar extends Component {
             this.fillVol.style.width = this.thumbVol.style.left;
         }
     };
+
+    componentWillUpdate = (newProps, newState) => {
+        if (newProps.currentSoundFile && newProps.currentSoundFile !== this.props.currentSoundFile) {
+            this.timeUpdate(newProps.currentSoundFile);
+        }
+    }
     
     componentWillUnmount() {
         this.props.currentSoundFile.unbind('timeupdate', this.timeUpdate);
