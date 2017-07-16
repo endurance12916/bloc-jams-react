@@ -37,7 +37,7 @@ class ScrollText extends Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener("scroll", this.scrollDown)
+        window.removeEventListener("scroll", this.scrollDown);
     }
 
     render(){
@@ -72,6 +72,4 @@ const Home = () => {
     );
 }
 
-
-// export default Home;
 export { Home, DefaultText, ScrollText }

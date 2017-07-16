@@ -103,8 +103,6 @@ class Album extends Component {
             const sound = new buzz.sound(song.audioUrl, {
                 preload: true
             })
-            // is this the best way?
-            // this.child.timeUpdate(sound)
             this.setState({currentSoundFile: sound, currentSongObject: song})
             this.setVolume(sound, this.state.currentVolume)
             return sound
@@ -119,8 +117,6 @@ class Album extends Component {
             const sound = new buzz.sound(song.audioUrl, {
                 preload: true
             })
-            // is this the best way?
-            // this.child.timeUpdate(sound)
             this.setState({currentSoundFile: sound, currentSongObject: song})
             this.setVolume(sound, this.state.currentVolume)
             return sound
