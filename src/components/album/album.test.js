@@ -30,6 +30,7 @@ it('sets song after mouse click', () => {
   expect(inst.setSong).toHaveBeenCalled();
 })
 
+// TypeError: this.props.currentSoundFile.unbind is not a function
 it ('stops song before unmount', () => {
   const wrapper = mount(<Album />);
   const inst = wrapper.instance();

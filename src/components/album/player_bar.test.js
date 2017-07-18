@@ -17,6 +17,7 @@ it('renders without crashes', () => {
     shallow(<PlayerBar currentSongObject={ '' }/>)
 });
 
+// error: expect(jest.fn()).toHaveBeenCalled()
 it ('calls timeupdate function when component is updated', () => {
     let wrapper = mount(<PlayerBar currentSongObject='' currentSoundFile=''/>);
     const inst = wrapper.instance();
