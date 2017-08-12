@@ -35,6 +35,7 @@ it ('stops song before unmount', () => {
   const wrapper = mount(<Album />);
   const inst = wrapper.instance();
   inst.state.currentSoundFile.stop = jest.fn(); //TypeError: this.props.currentSoundFile.unbind is not a function
-  wrapper.unmount();
+  inst.componentWillUnmount();
+  // add .not to see where the error is
   expect(inst.state.currentSoundFile.stop).toHaveBeenCalled();
 })
